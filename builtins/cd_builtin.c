@@ -6,13 +6,13 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:18:50 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 16:47:22 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 20:15:41 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_env	*create_env_node(const char *key, const char *value)
+static t_env	*create_env_node(const char *key, const char *value)
 {
 	t_env	*new = malloc(sizeof(t_env));
 	if (!new)
@@ -23,7 +23,7 @@ t_env	*create_env_node(const char *key, const char *value)
 	return (new);
 }
 
-void	add_env_var(t_env **env_list, const char *key, const char *value)
+static void	add_env_var(t_env **env_list, const char *key, const char *value)
 {
 	t_env *tmp = *env_list;
 
@@ -48,7 +48,7 @@ void	add_env_var(t_env **env_list, const char *key, const char *value)
 		tmp->next = new;
 }
 
-void	update_env(t_data *data, char *key, char *value)
+static void	update_env(t_data *data, char *key, char *value)
 {
 	t_env *current = data->env_list;
 	

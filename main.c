@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:53:55 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 15:51:24 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 20:42:50 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,13 @@ int	main(int ac, char **av, char **envp)
 		if (*data.input)
 			add_history(data.input);
 		parse_and_exec(&data);
+		if (data.should_exit)
+			break;
 		free(data.input);
+		data.input = NULL;
 	}
+	// free(data.input);
+	free_tokens(data.tokens);
+	free_env_list(data.env_list);
 	return (0);
 }

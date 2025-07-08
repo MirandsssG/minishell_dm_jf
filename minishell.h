@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 16:47:51 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 20:30:32 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef	struct s_data
 	char		*var_name;
 	size_t		var_i;
 	t_env		*env_list;
+	int			should_exit;
 }	t_data;
 
 
@@ -54,17 +55,15 @@ int		execute_builtin(t_data *data);
 
 int		cd_builtin(t_data *data);
 
-void	update_env(t_data *data, char *key, char *value);
-
-void	add_env_var(t_env **env_list, const char *key, const char *value);
-
-t_env	*create_env_node(const char *key, const char *value);
-
 int		echo_builtin(t_data *data);
 
 int		env_builtin(t_data *data);
 
 int		exit_builtin(t_data *data);
+
+void	free_tokens(char **tokens);
+
+void	free_env_list(t_env *env);
 
 int		export_builtin(t_data *data);
 
