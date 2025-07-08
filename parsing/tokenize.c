@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:23:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/06/22 12:18:03 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 21:33:07 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ static int	is_space(char c)
 
 void	tokenize_inputs(t_data *data)
 {
+	if (data->tokens)
+	{
+		free_tokens(data->tokens);
+		data->tokens = NULL;
+	}
 	data->tokens = malloc(sizeof(char *) * 1024);
 	data->i = 0;
 	data->j = 0;

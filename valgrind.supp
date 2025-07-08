@@ -1,0 +1,129 @@
+# Executing this file with valgrind will suppress all 
+# readline and add_history-related memleaks.
+# 
+# To execute this file, execute the following command:
+# valgrind --suppressions=valgrind.supp [...]
+# 
+# As an example, the following command:
+# valgrind --suppressions=valgrind.supp 
+# --leak-check=full --show-leak-kinds=all ./minishell
+# 
+# An example of an output can be this one:
+# ==100825== LEAK SUMMARY:
+# ==100825==    definitely lost: 0 bytes in 0 blocks
+# ==100825==    indirectly lost: 0 bytes in 0 blocks
+# ==100825==      possibly lost: 0 bytes in 0 blocks
+# ==100825==    still reachable: 4,097 bytes in 7 blocks
+# ==100825==         suppressed: 204,195 bytes in 221 blocks
+# 
+# Sending all readline-related leaks to suppression
+
+{
+   readline_1
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:readline
+   ...
+}
+
+{
+   readline_2
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:readline
+   ...
+}
+
+{
+   readline_3
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:readline
+}
+
+{
+   readline_4
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   
+   ...
+   fun:readline
+}
+
+{
+   readline_5
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   
+   fun:readline
+   ...
+   
+}
+
+{
+   readline_6
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   
+   ...
+   fun:readline
+   ...
+   
+}
+
+{
+   add_history_1
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:add_history
+   ...
+}
+
+{
+   add_history_2
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:add_history
+   ...
+}
+
+{
+   add_history_3
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:add_history
+}
+
+{
+   add_history_4
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   
+   ...
+   fun:add_history
+}
+
+{
+   add_history_5
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   
+   fun:add_history
+   ...
+   
+}
+
+{
+   add_history_6
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   
+   ...
+   fun:add_history
+   ...
+   
+}

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:47 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 20:30:19 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 20:57:04 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void	free_tokens(char **tokens)
 	if (!tokens)
 		return;
 	while (tokens[i])
+	{
 		free(tokens[i]);
+		i++;
+	}
 	free(tokens);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 20:48:58 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 21:07:47 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ void	expand_variables(t_data *data)
 	{
 		expanded = expand_token(data->tokens[i], data);
 		free(data->tokens[i]);
-		data->tokens[i] = expanded;
+		data->tokens[i] = ft_strdup(expanded);
+		free(expanded);
 		i++;
 	}
 }
