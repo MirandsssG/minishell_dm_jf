@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:53:55 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/06/26 14:37:28 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 15:51:24 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,14 @@ void ctrlc_handler(int sig)
     rl_redisplay();
 }
 
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
 
 	(void)ac;
 	(void)av;
 	ft_memset(&data, 0, sizeof(t_data));
+	data.env_list = init_env(envp);
 	
 	signal(SIGINT, ctrlc_handler);
 	signal(SIGQUIT, SIG_IGN);

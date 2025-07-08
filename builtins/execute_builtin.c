@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/06/22 14:53:28 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 16:21:03 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	execute_builtin(t_data *data)
 	if (ft_strcmp(data->tokens[0], "echo") == 0)
 		return (echo_builtin(data));
 	if (ft_strcmp(data->tokens[0], "pwd") == 0)
-		return (pwd_builtin(data));
+		return (pwd_builtin());
 	if (ft_strcmp(data->tokens[0], "export") == 0)
 		return (export_builtin(data));
 	if (ft_strcmp(data->tokens[0], "unset") == 0)

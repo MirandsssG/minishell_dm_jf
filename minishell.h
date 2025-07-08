@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/06/22 13:39:14 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/08 16:47:51 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@
 
 # include "includes/libft/libft.h"
 
+typedef struct s_env
+{
+	char		*key;
+	char		*value;
+	struct	s_env *next;
+} t_env;
+
 typedef	struct s_data
 {
 	char		*input;
@@ -36,13 +43,22 @@ typedef	struct s_data
 	int			var_start;
 	char		*var_name;
 	size_t		var_i;
+	t_env		*env_list;
 }	t_data;
+
+
 
 // Builtins
 
 int		execute_builtin(t_data *data);
 
 int		cd_builtin(t_data *data);
+
+void	update_env(t_data *data, char *key, char *value);
+
+void	add_env_var(t_env **env_list, const char *key, const char *value);
+
+t_env	*create_env_node(const char *key, const char *value);
 
 int		echo_builtin(t_data *data);
 
@@ -52,11 +68,19 @@ int		exit_builtin(t_data *data);
 
 int		export_builtin(t_data *data);
 
-int		pwd_builtin(t_data *data);
+int		pwd_builtin(void);
 
 int		unset_builtin(t_data *data);
 
 // Env
+
+t_env	*init_env(char **envp);
+
+t_env	*new_env_node(char *key, char *value);
+
+char	*get_value(char *env_str);
+
+char	*get_key(char *env_str);
 
 // Execute
 
