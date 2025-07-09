@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 20:30:32 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/09 20:29:39 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void	free_tokens(char **tokens);
 void	free_env_list(t_env *env);
 
 int		export_builtin(t_data *data);
+
+int		is_valid_varname(char *str);
 
 int		pwd_builtin(void);
 
