@@ -6,14 +6,53 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/09 22:07:54 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/11 00:15:58 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static void print_cmds(t_cmd *cmds)
+{
+    t_cmd *tmp = cmds;
+    int cmd_index = 0;
+
+    while (tmp)
+    {
+        printf("Command %d:\n", cmd_index);
+        printf("  args: ");
+        if (tmp->args)
+        {
+            for (int i = 0; tmp->args[i]; i++)
+                printf("'%s' ", tmp->args[i]);
+        }
+        else
+            printf("(null)");
+
+        printf("\n");
+        printf("  infile: %s\n", tmp->infile ? tmp->infile : "NULL");
+        printf("  outfile: %s\n", tmp->outfile ? tmp->outfile : "NULL");
+        printf("  append: %d\n", tmp->append);
+        printf("  heredoc: %d\n", tmp->heredoc);
+        printf("  heredoc_delim: %s\n", tmp->heredoc_delim ? tmp->heredoc_delim : "NULL");
+        printf("\n");
+
+        tmp = tmp->next;
+        cmd_index++;
+    }
+}
+
+void	execute(t_data *data, t_cmd *cmds)
+{
+	if (cmds->next)
+		exec_pipes(data, cmds);
+	else
+		exec_without_pipes(data, cmds);
+}
+
 void	parse_and_exec(t_data *data)
 {
+	t_cmd	*cmds;
 	tokenize_inputs(data);
 	for (int i = 0; data->tokens[i]; i++)
         printf("token[%d] = '%s'\n", i, data->tokens[i]);
@@ -23,5 +62,10 @@ void	parse_and_exec(t_data *data)
 	if (is_builtin(data->tokens[0]))
 		execute_builtin(data);
 	else
-		printf("is not Builtin\n");
+	{
+		cmds = parse_cmds(data->tokens);
+		print_cmds(cmds);
+		execute(data, cmds);
+		free_cmds(cmds);
+	}
 }

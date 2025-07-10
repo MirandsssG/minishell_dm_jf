@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/09 20:29:39 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/11 00:12:26 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,17 @@ typedef	struct s_data
 	t_env		*env_list;
 	int			should_exit;
 }	t_data;
+
+typedef struct s_cmd
+{
+	char	**args;
+	char	*infile;
+	char	*outfile;
+	int		append;
+	int		heredoc;
+	char	*heredoc_delim;
+	struct	s_cmd *next;
+} t_cmd;
 
 
 
@@ -87,6 +98,14 @@ char	*get_key(char *env_str);
 
 void	parse_and_exec(t_data *data);
 
+void	execute(t_data *data, t_cmd *cmds);
+
+void	exec_pipes(t_data *data, t_cmd *cmds);
+
+void	exec_without_pipes(t_data *data, t_cmd *cmds);
+
+void	free_cmds(t_cmd *cmd);
+
 // Parsing
 
 void	tokenize_inputs(t_data *data);
@@ -94,6 +113,8 @@ void	tokenize_inputs(t_data *data);
 void	expand_variables(t_data *data);
 
 int		is_builtin(const char *cmd);
+
+t_cmd	*parse_cmds(char **tokens);
 
 // Utils
 

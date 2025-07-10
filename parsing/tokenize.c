@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:23:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 21:33:07 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/11 00:21:45 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,17 @@ void	tokenize_inputs(t_data *data)
 		while (is_space(data->input[data->i]))
 			data->i++;
 		if (!data->input[data->i]) break;
-		if (is_special(data->input[data->i]))
+		if ((data->input[data->i] == '>' && data->input[data->i + 1] == '>') ||
+			(data->input[data->i] == '<' && data->input[data->i + 1] == '<'))
+		{
+			data->tokens[data->k] = malloc(3);
+			data->tokens[data->k][0] = data->input[data->i];
+			data->tokens[data->k][1] = data->input[data->i + 1];
+			data->tokens[data->k][2] = '\0';
+			data->k++;
+			data->i += 2;
+}
+		else if (is_special(data->input[data->i]))
 		{
 			data->tokens[data->k] = malloc(2);
 			data->tokens[data->k][0] = data->input[data->i];
