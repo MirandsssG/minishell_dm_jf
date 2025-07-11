@@ -1,43 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo_builtin.c                                     :+:      :+:    :+:   */
+/*   free_split.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/21 16:19:18 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 03:16:14 by mirandsssg       ###   ########.fr       */
+/*   Created: 2025/07/11 01:15:27 by mirandsssg        #+#    #+#             */
+/*   Updated: 2025/07/11 01:16:24 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	echo_builtin(t_cmd *cmd)
+void	free_split(char **arr)
 {
-	int		i;
-	int		j;
-	bool	n_flag;
+	int	i;
 
-	i = 1;
-	n_flag = false;
-	while (cmd->args[i] && cmd->args[i][0] == '-' && cmd->args[i][1] == 'n')
+	if (!arr)
+		return;
+	i = 0;
+	while (arr[i])
 	{
-		j = 2;
-		while (cmd->args[i][j] == 'n')
-			j++;
-		if (cmd->args[i][j] != '\0')
-			break;
-		n_flag = true;
+		free(arr[i]);
 		i++;
 	}
-	while (cmd->args[i])
-	{
-		printf("%s", cmd->args[i]);
-		if (cmd->args[i + 1])
-			printf(" ");
-		i++;
-	}
-	if (!n_flag)
-		printf("\n");
-	return (0);
+	free(arr);
 }

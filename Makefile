@@ -4,10 +4,10 @@ AR = ar rc
 NAME = minishell
 SRCS = main.c \
 		$(addprefix builtins/, cd_builtin.c echo_builtin.c env_builtin.c exit_builtin.c export_builtin.c pwd_builtin.c unset_builtin.c execute_builtin.c) \
-		$(addprefix env/, initialize_env.c) \
+		$(addprefix env/, initialize_env.c env_list_to_envp.c) \
 		$(addprefix execute/, parse_and_exec.c exec_pipes.c exec_without_pipes.c free_cmds.c) \
 		$(addprefix parsing/, tokenize.c expand_variables.c is_builtin.c parse_cmds.c) \
-		$(addprefix utils/, ft_strndup.c ft_strcmp.c)
+		$(addprefix utils/, ft_strndup.c ft_strcmp.c free_split.c ft_strjoin_free.c ft_strcpy.c)
 OBJ_DIR = objects
 OBJ = $(SRCS:.c=.o)
 OBJ := $(addprefix $(OBJ_DIR)/, $(OBJ))

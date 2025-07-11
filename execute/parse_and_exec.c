@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 00:15:58 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/11 03:09:33 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,27 +45,31 @@ static void print_cmds(t_cmd *cmds)
 void	execute(t_data *data, t_cmd *cmds)
 {
 	if (cmds->next)
+	{
+		printf("exec with pipes\n");
 		exec_pipes(data, cmds);
+	}
 	else
+	{
+		printf("exec without pipes\n");
 		exec_without_pipes(data, cmds);
+	}
 }
 
 void	parse_and_exec(t_data *data)
 {
 	t_cmd	*cmds;
 	tokenize_inputs(data);
-	for (int i = 0; data->tokens[i]; i++)
-        printf("token[%d] = '%s'\n", i, data->tokens[i]);
+	// for (int i = 0; data->tokens[i]; i++)
+    //     printf("token[%d] = '%s'\n", i, data->tokens[i]);
 	expand_variables(data);
-	for (int i = 0; data->tokens[i]; i++)
-        printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
-	if (is_builtin(data->tokens[0]))
-		execute_builtin(data);
+	// for (int i = 0; data->tokens[i]; i++)
+    //     printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
+	cmds = parse_cmds(data->tokens);
+	print_cmds(cmds);
+	if (cmds && cmds->args && is_builtin(cmds->args[0]) && cmds->next == NULL)
+		execute_builtin_with_redirections(data, cmds);
 	else
-	{
-		cmds = parse_cmds(data->tokens);
-		print_cmds(cmds);
 		execute(data, cmds);
-		free_cmds(cmds);
-	}
+	free_cmds(cmds);
 }

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/09 20:29:27 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/11 03:22:46 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,36 +80,36 @@ void	update_env(t_env **env_list, char *key, char *value)
 	}
 }
 
-int	export_builtin(t_data *data)
+int	export_builtin(t_data *data, t_cmd *cmd)
 {
 	int		i;
 	char	*key;
 	char	*value;
 	char	*equal;
-	char	**tokens;
+	char	**args;
 
 	i = 1;
-	tokens = data->tokens;
-	if (!tokens[1])
+	args = cmd->args;
+	if (!args[1])
 	{
 		print_export(data->env_list);
 		return (0);
 	}
-	while (tokens[i])
+	while (args[i])
 	{
-		if (!is_valid_varname(tokens[i]))
-			printf("minishell: export: `%s`: not a valid varname\n", tokens[i]);
+		if (!is_valid_varname(args[i]))
+			printf("minishell: export: `%s`: not a valid varname\n", args[i]);
 		else
 		{
-			equal = ft_strchr(tokens[i], '=');
+			equal = ft_strchr(args[i], '=');
 			if (equal)
 			{
-				key = ft_substr(tokens[i], 0, equal - tokens[i]);
+				key = ft_substr(args[i], 0, equal - args[i]);
 				value = ft_strdup(equal + 1);
 			}
 			else
 			{
-				key = ft_strdup(tokens[i]);
+				key = ft_strdup(args[i]);
 				value = NULL;
 			}
 			update_env(&data->env_list, key, value);

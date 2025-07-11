@@ -1,51 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_builtin.c                                     :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/21 16:19:47 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 03:28:19 by mirandsssg       ###   ########.fr       */
+/*   Created: 2025/07/11 02:24:29 by mirandsssg        #+#    #+#             */
+/*   Updated: 2025/07/11 02:24:57 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
-
-void	free_tokens(char **tokens)
+char	*ft_strcpy(char *dest, const char *src)
 {
 	int	i;
 
 	i = 0;
-	if (!tokens)
-		return;
-	while (tokens[i])
+	while (src[i])
 	{
-		free(tokens[i]);
+		dest[i] = src[i];
 		i++;
 	}
-	free(tokens);
-}
-
-void	free_env_list(t_env *env)
-{
-	t_env	*tmp;
-	
-	while (env)
-	{
-		tmp = env;
-		if (tmp->key)
-			free(tmp->key);
-		if (tmp->value)
-			free(tmp->value);
-		env = env->next;
-		free(tmp);
-	}
-}
-
-int	exit_builtin(t_data *data)
-{
-	printf("exit\n");
-	data->should_exit = 1;
-	return (0);
+	dest[i] = '\0';
+	return (dest);
 }

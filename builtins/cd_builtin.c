@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:18:50 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 20:15:41 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/11 03:19:07 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ static void	update_env(t_data *data, char *key, char *value)
 	add_env_var(&data->env_list, key, value);
 }
 
-int	cd_builtin(t_data *data)
+int	cd_builtin(t_data *data, t_cmd *cmd)
 {
 	char	*path;
 	char	*old_pwd;
 	char	*new_pwd;
 
 	old_pwd = getcwd(NULL, 0);
-	if (!data->tokens[1])
+	if (!cmd->args[1])
 	{
 		path = getenv("HOME");
 		if (!path)
@@ -83,7 +83,7 @@ int	cd_builtin(t_data *data)
 		}
 	}
 	else
-		path = data->tokens[1];
+		path = cmd->args[1];
 	if (chdir(path) != 0)
 	{
 		perror("cd");
