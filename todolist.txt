@@ -26,14 +26,14 @@
 //	◦ exit with no options //
 // - The readline() function may cause memory leaks, but you are not required to fix them. //
 // However, this does not mean your own code, yes the code you wrote, can have memory leaks. //
+// - Not interpret unclosed quotes or special characters which are not required by the //
+// subject such as \ (backslash) or ; (semicolon) //
+// - Handle ’ (single quote) which should prevent the shell from interpreting the //
+// metacharacters in the quoted sequence //
+// - Handle " (double quote) which should prevent the shell from interpreting the // 
+// metacharacters in the quoted sequence except for $ (dollar sign) //
 
 - Implement pipes (| character). The output of each command in the pipeline is
 connected to the input of the next command via a pipe
-- Not interpret unclosed quotes or special characters which are not required by the
-subject such as \ (backslash) or ; (semicolon)
-- Handle ’ (single quote) which should prevent the shell from interpreting the
-metacharacters in the quoted sequence
-- Handle " (double quote) which should prevent the shell from interpreting the 
-metacharacters in the quoted sequence except for $ (dollar sign)
 - Handle $? which should expand to the exit status of the most recently executed
 foreground pipeline
