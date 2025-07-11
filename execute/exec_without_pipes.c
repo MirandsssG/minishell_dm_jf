@@ -6,11 +6,35 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 02:41:58 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/11 04:00:05 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static int	handle_heredoc(const char *delimiter)
+{
+	int		pipe_fd[2];
+	char	*line;
+
+	if (pipe(pipe_fd) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	while (1)
+	{
+		line = readline("> ");
+		if (!line || ft_strcmp(line, delimiter) == 0)
+			break;
+		write(pipe_fd[1], line, ft_strlen(line));
+		write(pipe_fd[1], "\n", 1);
+		free(line);
+	}
+	free(line);
+	close(pipe_fd[1]);
+	return (pipe_fd[0]);
+}
 
 static char	*get_env_var(char *key, t_env *env_list)
 {
@@ -64,13 +88,22 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 	int		flags;
 	char	**envp;
 	char	*cmd_path;
+	int		heredoc_fd;
 	
 	infile_fd = -1;
 	outfile_fd = -1;
 	pid = fork();
 	if (pid == 0)
 	{
-		if (cmd->infile)
+		if (cmd->heredoc)
+		{
+			heredoc_fd = handle_heredoc(cmd->heredoc_delim);
+			if (heredoc_fd < 0)
+				exit(EXIT_FAILURE);
+			dup2(heredoc_fd, STDIN_FILENO);
+			close(heredoc_fd);
+		}
+		else if (cmd->infile)
 		{
 			infile_fd = open(cmd->infile, O_RDONLY);
 			if (infile_fd < 0)
