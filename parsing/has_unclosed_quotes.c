@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcpy.c                                        :+:      :+:    :+:   */
+/*   has_unclosed_quotes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/11 02:24:29 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 18:56:13 by mirandsssg       ###   ########.fr       */
+/*   Created: 2025/07/11 18:07:01 by mirandsssg        #+#    #+#             */
+/*   Updated: 2025/07/11 18:27:01 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_strcpy(char *dest, const char *src)
+int	has_unclosed_quotes(const char *line)
 {
-	int	i;
+	int		i;
+	char	quote;
 
 	i = 0;
-	while (src[i])
+	quote = 0;
+	while (line[i])
 	{
-		dest[i] = src[i];
+		if ((line[i] == '\'' || line[i] == '"') && quote == 0)
+			quote = line[i];
+		else if (line[i] == quote)
+			quote = 0;
 		i++;
 	}
-	dest[i] = '\0';
-	return (dest);
+	return (quote != 0);
 }

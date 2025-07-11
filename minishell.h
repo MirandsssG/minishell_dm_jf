@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 03:23:32 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/11 19:13:21 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,17 @@ typedef	struct s_data
 {
 	char		*input;
 	char		**tokens;
-	size_t		i;
-	size_t		j;
 	size_t		k;
+	size_t		j;
 	int			var_start;
 	char		*var_name;
 	size_t		var_i;
 	t_env		*env_list;
 	int			should_exit;
+	int			last_exit_status;
+	int			i;
+	int			in_single;
+	int			in_double;
 }	t_data;
 
 typedef struct s_cmd
@@ -124,6 +127,8 @@ int		is_builtin(const char *cmd);
 
 t_cmd	*parse_cmds(char **tokens);
 
+int		has_unclosed_quotes(const char *line);
+
 // Utils
 
 char	*ft_strndup(const char *str, size_t n);
@@ -135,5 +140,7 @@ void	free_split(char **arr);
 char	*ft_strjoin_free(char *s1, char *s2);
 
 char	*ft_strcpy(char *dest, const char *src);
+
+char	*ft_strjoin_free_expand(char *s1, char *s2, int free1, int free2);
 
 #endif
