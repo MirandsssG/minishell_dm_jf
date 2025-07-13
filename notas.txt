@@ -2,3 +2,4 @@ leaks:
 	> a.txt
 
 env -i ./minishell resolver env
+
