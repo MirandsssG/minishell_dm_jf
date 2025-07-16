@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 03:22:46 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 11:12:24 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,10 @@ int	export_builtin(t_data *data, t_cmd *cmd)
 	char	*value;
 	char	*equal;
 	char	**args;
+	int		ret;
 
 	i = 1;
+	ret = 0;
 	args = cmd->args;
 	if (!args[1])
 	{
@@ -98,7 +100,10 @@ int	export_builtin(t_data *data, t_cmd *cmd)
 	while (args[i])
 	{
 		if (!is_valid_varname(args[i]))
+		{
 			printf("minishell: export: `%s`: not a valid varname\n", args[i]);
+			ret = 1;
+		}
 		else
 		{
 			equal = ft_strchr(args[i], '=');
@@ -118,5 +123,5 @@ int	export_builtin(t_data *data, t_cmd *cmd)
 		}
 		i++;
 	}
-	return (0);
+	return (ret);
 }

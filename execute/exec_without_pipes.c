@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 18:42:41 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 11:00:34 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static char	*get_cmd_path(char *cmd, t_env *env_list)
 	char	**paths;
 	char	*full_path;
 	char	*path;
+	char	*tmp;
 	int		i;
 
 	if (ft_strchr(cmd, '/'))
@@ -65,8 +66,8 @@ static char	*get_cmd_path(char *cmd, t_env *env_list)
 	i = 0;
 	while (paths[i])
 	{
-		full_path = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin_free(full_path, cmd);
+		tmp = ft_strjoin(paths[i], "/");
+		full_path = ft_strjoin_free(tmp, cmd);
 		if (access(full_path, X_OK) == 0)
 		{
 			free_split(paths);
@@ -149,5 +150,9 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 		}
 	}
 	else
+	{
 		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			data->last_exit_status = WEXITSTATUS(status);
+	}
 }

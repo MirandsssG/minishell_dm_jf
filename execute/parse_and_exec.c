@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 19:55:47 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 11:06:59 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	execute(t_data *data, t_cmd *cmds)
 void	parse_and_exec(t_data *data)
 {
 	t_cmd	*cmds;
+	int		status;
 
 	if (has_unclosed_quotes(data->input))
 	{
@@ -74,7 +75,10 @@ void	parse_and_exec(t_data *data)
 	cmds = parse_cmds(data->tokens);
 	// print_cmds(cmds);
 	if (cmds && cmds->args && is_builtin(cmds->args[0]) && cmds->next == NULL)
-		execute_builtin_with_redirections(data, cmds);
+	{
+		status = execute_builtin_with_redirections(data, cmds);
+		data->last_exit_status = status;
+	}
 	else
 		execute(data, cmds);
 	free_cmds(cmds);

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:39 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 03:23:48 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 11:12:33 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,21 @@ int	unset_builtin(t_data *data, t_cmd *cmd)
 {
 	int		i;
 	char	**args;
-	
+	int		ret;
+
+	ret = 0;	
 	args = cmd->args;
 	i = 1;
 	while (args[i])
 	{
 		if (!is_valid_varname(args[i]))
+		{
 			printf("minishell: unset: `%s`: not a valid varname\n", args[i]);
+			ret = 1;
+		}
 		else
 			remove_env_var(&data->env_list, args[i]);
 		i++;
 	}
-	return (0);
+	return (ret);
 }

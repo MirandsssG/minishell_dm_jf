@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 19:13:21 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 11:14:10 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct s_cmd
 
 int		execute_builtin(t_data *data, t_cmd *cmd);
 
-void	execute_builtin_with_redirections(t_data *data, t_cmd *cmd);
+int		execute_builtin_with_redirections(t_data *data, t_cmd *cmd);
 
 int		cd_builtin(t_data *data, t_cmd *cmd);
 

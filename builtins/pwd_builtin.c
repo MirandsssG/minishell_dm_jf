@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:06 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 16:22:41 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 11:11:23 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ int	pwd_builtin(void)
 		free(cwd);
 	}
 	else
+	{
 		perror("pwd");
+		return (1);
+	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 03:28:49 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 11:13:35 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ int	execute_builtin(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-void	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
+int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 {
 	int		infile_fd;
 	int		outfile_fd;
 	int		flags;
 	int		stdin_copy;
 	int		stdout_copy;
+	int		ret;
 	
 	infile_fd = -1;
 	outfile_fd = -1;
@@ -77,9 +78,10 @@ void	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 		dup2(outfile_fd, STDOUT_FILENO);
 		close(outfile_fd);
 	}
-	execute_builtin(data, cmd);
+	ret = execute_builtin(data, cmd);
 	dup2(stdin_copy, STDIN_FILENO);
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);
 	close(stdout_copy);
+	return (ret);
 }
