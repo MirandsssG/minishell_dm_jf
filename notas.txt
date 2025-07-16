@@ -1,13 +1,9 @@
-leaks:
-	> a.txt
-
 env -i ./minishell resolver env
-
-Command not found - leaks e exit status 0 (deveria ser 127)
-"'$PATH'"
 
 Segfault no here_doc
 << eof
 
 cat << a << b
 Fecha quando o segundo eof é accionado durante o primeiro
+
+export nao esta a guardar no env, nao da para imprimir

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 11:14:10 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 13:06:08 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_cmd
 {
 	char	**args;
 	char	*infile;
+	int		infile_fd;
 	char	*outfile;
 	int		append;
 	int		heredoc;
@@ -116,6 +117,8 @@ void	exec_pipes(t_data *data, t_cmd *cmds);
 void	exec_without_pipes(t_data *data, t_cmd *cmds);
 
 void	free_cmds(t_cmd *cmd);
+
+void	process_heredocs(t_cmd *cmds);
 
 // Parsing
 

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 23:45:08 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 18:40:00 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 12:04:17 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,11 @@ t_cmd	*parse_cmds(char **tokens)
 		current = new_cmd;
 		if (tokens[i] && ft_strcmp(tokens[i], "|") == 0)
 			i++;
+		if (arg_i == 0)
+		{
+			free(new_cmd->args);
+			new_cmd->args = NULL;
+		}
 	}
 	return (head);
 }

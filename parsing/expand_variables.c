@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 11:17:17 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/16 11:59:31 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,14 @@ static char	*expand_token(const char *token, t_data *data)
 		if (token[i] == '\'' && !data->in_double)
 		{
 			data->in_single = !data->in_single;
-			result = ft_strjoin_free_expand(result, ft_strndup(&token[i++], 1), 1, 1);
+			// result = ft_strjoin_free_expand(result, ft_strndup(&token[i++], 1), 1, 1);
+			i++;
 		}
 		else if (token[i] == '\"' && !data->in_single)
 		{
 			data->in_double = !data->in_double;
-			result = ft_strjoin_free_expand(result, ft_strndup(&token[i++], 1), 1, 1);
+			// result = ft_strjoin_free_expand(result, ft_strndup(&token[i++], 1), 1, 1);
+			i++;
 		}
 		else if (token[i] == '$' && !data->in_single)
 		{
