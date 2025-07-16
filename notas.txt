@@ -1,9 +1,8 @@
 env -i ./minishell resolver env
 
-Segfault no here_doc
-<< eof
+<< eof , ja nao tem leaks mas esta a dar exit (possivelmente por estar dentro do exec without pipes)
 
 cat << a << b
-Fecha quando o segundo eof é accionado durante o primeiro
+Fecha quando o segundo eof é accionado durante o primeiro, nao esta a assumir como 2 heredocs
 
 export nao esta a guardar no env, nao da para imprimir
