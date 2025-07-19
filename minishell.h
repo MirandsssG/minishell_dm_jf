@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 13:06:08 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/19 02:51:04 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ char	*get_key(char *env_str);
 char	**env_list_to_envp(t_env *env_list);
 
 void	free_envp(char **envp);
+
+char	*get_env_value(const char *key, t_env *env);
 
 // Execute
 

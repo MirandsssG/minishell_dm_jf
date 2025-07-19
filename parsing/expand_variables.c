@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 11:59:31 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/19 02:51:40 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	*expand_token(const char *token, t_data *data)
 				while (token[i] && (ft_isalnum(token[i]) || token[i] == '_'))
 					i++;
 				var_name = ft_strndup(&token[start], i - start);
-				value = getenv(var_name);
+				value = get_env_value(var_name, data->env_list);
 				free(var_name);
 				if (value)
 					result = ft_strjoin_free_expand(result, ft_strdup(value), 1, 1);

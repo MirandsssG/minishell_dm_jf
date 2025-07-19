@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:19:53 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 16:41:10 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/19 02:50:49 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,17 @@ char	*get_value(char *env_str)
 	if (!equal_sign)
 		return (NULL);
 	return (ft_strdup(equal_sign + 1));
+}
+
+char	*get_env_value(const char *key, t_env *env)
+{
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
 }
 
 t_env	*new_env_node(char *key, char *value)
