@@ -6,41 +6,41 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 13:37:27 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/22 11:27:52 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// static void print_cmds(t_cmd *cmds)
-// {
-//     t_cmd *tmp = cmds;
-//     int cmd_index = 0;
+static void print_cmds(t_cmd *cmds)
+{
+    t_cmd *tmp = cmds;
+    int cmd_index = 0;
 
-//     while (tmp)
-//     {
-//         printf("Command %d:\n", cmd_index);
-//         printf("  args: ");
-//         if (tmp->args)
-//         {
-//             for (int i = 0; tmp->args[i]; i++)
-//                 printf("'%s' ", tmp->args[i]);
-//         }
-//         else
-//             printf("(null)");
+    while (tmp)
+    {
+        printf("Command %d:\n", cmd_index);
+        printf("  args: ");
+        if (tmp->args)
+        {
+            for (int i = 0; tmp->args[i]; i++)
+                printf("'%s' ", tmp->args[i]);
+        }
+        else
+            printf("(null)");
 
-//         printf("\n");
-//         printf("  infile: %s\n", tmp->infile ? tmp->infile : "NULL");
-//         printf("  outfile: %s\n", tmp->outfile ? tmp->outfile : "NULL");
-//         printf("  append: %d\n", tmp->append);
-//         printf("  heredoc: %d\n", tmp->heredoc);
-//         printf("  heredoc_delim: %s\n", tmp->heredoc_delim ? tmp->heredoc_delim : "NULL");
-//         printf("\n");
+        printf("\n");
+        printf("  infile: %s\n", tmp->infile ? tmp->infile : "NULL");
+        printf("  outfile: %s\n", tmp->outfile ? tmp->outfile : "NULL");
+        printf("  append: %d\n", tmp->append);
+        printf("  heredoc: %d\n", tmp->heredoc);
+        printf("  heredoc_delim: %s\n", tmp->heredoc_delim ? tmp->heredoc_delim : "NULL");
+        printf("\n");
 
-//         tmp = tmp->next;
-//         cmd_index++;
-//     }
-// }
+        tmp = tmp->next;
+        cmd_index++;
+    }
+}
 
 void	execute(t_data *data, t_cmd *cmds)
 {
@@ -67,13 +67,13 @@ void	parse_and_exec(t_data *data)
 		return ;
 	}
 	tokenize_inputs(data);
-	// for (int i = 0; data->tokens[i]; i++)
-    //     printf("token[%d] = '%s'\n", i, data->tokens[i]);
+	for (int i = 0; data->tokens[i]; i++)
+        printf("token[%d] = '%s'\n", i, data->tokens[i]);
 	expand_variables(data);
-	// for (int i = 0; data->tokens[i]; i++)
-    //     printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
+	for (int i = 0; data->tokens[i]; i++)
+        printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
 	cmds = parse_cmds(data->tokens);
-	// print_cmds(cmds);
+	print_cmds(cmds);
 	if (cmds && cmds->args && is_builtin(cmds->args[0]) && cmds->next == NULL)
 	{
 		status = execute_builtin_with_redirections(data, cmds);
