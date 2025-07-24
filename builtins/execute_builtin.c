@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 11:13:35 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/24 19:44:01 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,13 @@ int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 	
 	infile_fd = -1;
 	outfile_fd = -1;
+	ret = -1;
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
 	if (stdin_copy == -1 || stdout_copy == -1)
 	{
 		perror("dup");
-		exit(EXIT_FAILURE);
+		return (-1);
 	}
 	if (cmd->infile)
 	{
@@ -57,9 +58,14 @@ int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 		if (infile_fd < 0)
 		{
 			perror("open infile");
-			exit(EXIT_FAILURE);
+			goto restore;
 		}
-		dup2(infile_fd, STDIN_FILENO);
+		if (dup2(infile_fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 infile");
+			close (infile_fd);
+			goto restore;
+		}
 		close(infile_fd);
 	}
 	if (cmd->outfile)
@@ -73,14 +79,23 @@ int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 		if (outfile_fd < 0)
 		{
 			perror("open outfile");
-			exit(EXIT_FAILURE);
+			goto restore;
 		}
-		dup2(outfile_fd, STDOUT_FILENO);
+		if (dup2(outfile_fd, STDOUT_FILENO) == -1)
+		{
+			perror("dup2 outfile");
+			close(outfile_fd);
+			goto restore;
+		}
 		close(outfile_fd);
 	}
 	ret = execute_builtin(data, cmd);
-	dup2(stdin_copy, STDIN_FILENO);
-	dup2(stdout_copy, STDOUT_FILENO);
+
+restore:
+	if (dup2(stdin_copy, STDIN_FILENO) == -1)
+		perror("dup2 restore stdin");
+	if (dup2(stdout_copy, STDOUT_FILENO) == -1)
+		perror("dup2 restore stdout");
 	close(stdin_copy);
 	close(stdout_copy);
 	return (ret);

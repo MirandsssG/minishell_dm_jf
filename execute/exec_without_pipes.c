@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/22 11:09:44 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/07/24 19:59:37 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,14 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (cmd->infile_fd != -1)
+		if (cmd->infile_fd > 0)
 		{
-			dup2(cmd->infile_fd, STDIN_FILENO);
+			if (dup2(cmd->infile_fd, STDIN_FILENO) == -1)
+			{
+				perror("dup2 infile_fd");
+				close(cmd->infile_fd);
+				exit(EXIT_FAILURE);
+			}
 			close(cmd->infile_fd);
 		}
 		else if (cmd->infile)
@@ -119,6 +124,7 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 		{
 			perror("command not found");
 			free_envp(envp);
+			free_tokens(data->tokens);
 			exit(127);
 		}
 		if (execve(cmd_path, cmd->args, envp) == -1)

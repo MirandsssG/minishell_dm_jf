@@ -7,6 +7,4 @@ Fecha quando o segundo eof é accionado durante o primeiro, nao esta a assumir c
 
 sem comando a dar still reachable
 
-cat < notas.txt bad file descriptor
-
-export ARG="1 2 3 4 5" nao ta a guardar
+cat < a.txt (nao existe) da leaks
