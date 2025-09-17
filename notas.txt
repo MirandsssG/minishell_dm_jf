@@ -11,3 +11,4 @@ cat < a.txt (nao existe) da leaks
 
 fazer os pipes ( | )
 
+as singles quotes nao estao a ignorar as variables do env
