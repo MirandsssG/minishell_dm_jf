@@ -9,6 +9,8 @@ sem comando a dar still reachable
 
 cat < a.txt (nao existe) da leaks
 
-fazer os pipes ( | )
-
 as singles quotes nao estao a ignorar as variables do env
+
+tokenize_inputs tems um buffer de 1024, mudar para dinamico
+
+fazer os pipes ( | ) teste
