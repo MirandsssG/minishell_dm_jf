@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/19 02:51:04 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/04 17:20:53 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,5 +147,7 @@ char	*ft_strjoin_free(char *s1, char *s2);
 char	*ft_strcpy(char *dest, const char *src);
 
 char	*ft_strjoin_free_expand(char *s1, char *s2, int free1, int free2);
+
+void	ctrlc_handler(int sig);
 
 #endif

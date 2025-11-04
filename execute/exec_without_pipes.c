@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/24 19:59:37 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/04 17:16:28 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,7 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 		return ;
 	}
 	if (cmd->heredoc)
-	{
 		process_heredocs(cmd);
-		return ;
-	}
 	pid = fork();
 	if (pid == 0)
 	{
@@ -140,5 +137,10 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			data->last_exit_status = WEXITSTATUS(status);
+		if (cmd->heredoc && cmd->infile_fd > 0)
+		{
+			close(cmd->infile_fd);
+			cmd->infile_fd = -1;
+		}
 	}
 }

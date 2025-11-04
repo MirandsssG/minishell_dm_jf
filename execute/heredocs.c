@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 12:55:43 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 13:07:11 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/04 17:22:32 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ static int	handle_heredoc(const char *delimiter)
 		free(line);
 	}
 	close(pipe_fd[1]);
+	rl_on_new_line();
+	rl_replace_line("", 0);
 	return (pipe_fd[0]);
 }
 
