@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:23:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/24 19:17:01 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/04 16:43:08 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	tokenize_inputs(t_data *data)
 
 	if (data->tokens)
 	{
-		free_tokens(data->tokens);
+		free_split(data->tokens);
 		data->tokens = NULL;
 	}
 	data->tokens = malloc(sizeof(char *) * 1024);

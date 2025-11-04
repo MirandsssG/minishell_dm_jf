@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/22 11:27:52 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/04 16:40:57 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,24 @@ void	parse_and_exec(t_data *data)
 		return ;
 	}
 	tokenize_inputs(data);
+	if (!data->tokens || !data->tokens[0])
+	{
+		free_split(data->tokens);
+		data->tokens = NULL;
+		return;
+	}
 	for (int i = 0; data->tokens[i]; i++)
         printf("token[%d] = '%s'\n", i, data->tokens[i]);
 	expand_variables(data);
 	for (int i = 0; data->tokens[i]; i++)
         printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
 	cmds = parse_cmds(data->tokens);
+	if (!cmds)
+	{
+		free_split(data->tokens);
+		data->tokens = NULL;
+		return;
+	}
 	print_cmds(cmds);
 	if (cmds && cmds->args && is_builtin(cmds->args[0]) && cmds->next == NULL)
 	{
@@ -82,4 +94,6 @@ void	parse_and_exec(t_data *data)
 	else
 		execute(data, cmds);
 	free_cmds(cmds);
+	free_split(data->tokens);
+	data->tokens = NULL;
 }
