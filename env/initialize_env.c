@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:19:53 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/19 02:50:49 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/04 17:55:10 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*get_value(char *env_str)
 
 	equal_sign = ft_strchr(env_str, '=');
 	if (!equal_sign)
-		return (NULL);
+		return (ft_strdup(""));
 	return (ft_strdup(equal_sign + 1));
 }
 
@@ -50,8 +50,8 @@ t_env	*new_env_node(char *key, char *value)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
-	node->key = key;
-	node->value = value;
+	node->key = ft_strdup(key);
+	node->value = ft_strdup(value);
 	node->next = NULL;
 	return (node);
 }
@@ -63,6 +63,32 @@ t_env	*init_env(char **envp)
 	t_env	*new;
 	char	*key;
 	char	*value;
+	char	*cwd;
+	
+	if (!envp || !*envp)
+	{
+		cwd = getcwd(NULL, 0);
+		head = new_env_node("PWD", cwd);
+		free(cwd);
+		if (!head)
+			return (NULL);
+		last = head;
+		new = new_env_node("SHLVL", "1");
+		if (!new)
+			return (head);
+		last->next = new;
+		last = new;
+		new = new_env_node("PATH", "/usr/local/bin:/usr/bin:/bin");
+		if (!new)
+			return (head);
+		last->next = new;
+		last = new;
+		new = new_env_node("_", "/usr/bin/env");
+		if (!new)
+			return (head);
+		last->next = new;
+		return (head);
+	}
 	
 	while (*envp)
 	{
