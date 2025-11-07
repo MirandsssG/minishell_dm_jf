@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:23:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/04 16:43:08 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/07 15:44:51 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	tokenize_inputs(t_data *data)
 					data->j = data->i;
 					while (data->input[data->i] && data->input[data->i] != quote)
 						data->i++;
-					part = ft_strndup(&data->input[data->j], data->i - data->j);
+					part = ft_substr(data->input, data->j - 1, (data->i - data->j) + 2);
 					data->i++;
 				}
 				else

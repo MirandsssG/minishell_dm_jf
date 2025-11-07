@@ -6,11 +6,40 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/19 02:51:40 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/07 15:51:03 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static char	*remove_quotes(const char *str)
+{
+	char	*res;
+	int		i;
+	int		j;
+	int		in_single;
+	int		in_double;
+
+	res = malloc(ft_strlen(str) + 1);
+	i = 0;
+	j = 0;
+	in_single = 0;
+	in_double = 0;
+	if (!res)
+		return (NULL);
+	while (str[i])
+	{
+		if (str[i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (str[i] == '"' && !in_single)
+			in_double = !in_double;
+		else
+			res[j++] = str[i];
+		i++;
+	}
+	res[j] = '\0';
+	return (res);
+}
 
 static char	*expand_token(const char *token, t_data *data)
 {
@@ -70,7 +99,9 @@ static char	*expand_token(const char *token, t_data *data)
 		else
 			result = ft_strjoin_free_expand(result, ft_strndup(&token[i++], 1), 1, 1);
 	}
-	return (result);
+	temp = remove_quotes(result);
+	free(result);
+	return (temp);
 }
 
 void	expand_variables(t_data *data)
