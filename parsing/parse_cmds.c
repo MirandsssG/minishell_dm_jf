@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 23:45:08 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 12:04:17 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/11 15:02:11 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ t_cmd	*parse_cmds(char **tokens)
 	int		i;
 	int		arg_i;
 	char	*arg;
+	int		heredoc_count;
+	int		j;
+	int		h_index;
 	
 	t_cmd *head = NULL;
 	t_cmd *current = NULL;
@@ -53,6 +56,17 @@ t_cmd	*parse_cmds(char **tokens)
 		t_cmd *new_cmd = ft_calloc(1, sizeof(t_cmd));
 		new_cmd->args = ft_calloc(100, sizeof(char*));
 		arg_i = 0;
+		heredoc_count = 0;
+		j = i;
+		while (tokens[j] && ft_strcmp(tokens[j], "|") != 0)
+		{
+			if (ft_strcmp(tokens[j], "<<") == 0 && tokens[j + 1])
+				heredoc_count++;
+			j++;
+		}
+		if (heredoc_count > 0)
+			new_cmd->heredoc_delim = ft_calloc(heredoc_count + 1, sizeof(char *));
+		h_index = 0;
 		while (tokens[i] && ft_strcmp(tokens[i], "|") != 0)
 		{
 			if (ft_strcmp(tokens[i], "<") == 0 && tokens[i + 1])
@@ -70,7 +84,7 @@ t_cmd	*parse_cmds(char **tokens)
 			else if (ft_strcmp(tokens[i], "<<") == 0 && tokens[i + 1])
 			{
 				new_cmd->heredoc = 1;
-				new_cmd->heredoc_delim = ft_strdup(tokens[++i]);
+				new_cmd->heredoc_delim[h_index++] = ft_strdup(tokens[++i]);
 			}
 			else
 			{
@@ -80,6 +94,8 @@ t_cmd	*parse_cmds(char **tokens)
 			i++;
 		}
 		new_cmd->args[arg_i] = NULL;
+		if (new_cmd->heredoc_delim)
+			new_cmd->heredoc_delim[h_index] = NULL;
 		if (!head)
 			head = new_cmd;
 		else

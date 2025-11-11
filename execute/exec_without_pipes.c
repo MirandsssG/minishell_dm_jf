@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/04 17:16:28 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/11 15:38:48 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,16 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 	}
 	if (cmd->heredoc)
 		process_heredocs(cmd);
+	envp = env_list_to_envp(data->env_list);
+	if (!envp)
+		return;
 	pid = fork();
+	if (pid < 0)
+	{
+		perror ("fork");
+		free_envp(envp);
+		return;
+	}
 	if (pid == 0)
 	{
 		if (cmd->infile_fd > 0)
@@ -113,24 +122,24 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 			dup2(outfile_fd, STDOUT_FILENO);
 			close(outfile_fd);
 		}
-		envp = env_list_to_envp(data->env_list);
-		if (!envp)
-			exit(EXIT_FAILURE);
-		cmd_path = get_cmd_path(cmd->args[0], data->env_list);
-		if (!cmd_path)
+		if (cmd->args && cmd->args[0])
 		{
-			perror("command not found");
-			free_envp(envp);
-			free_tokens(data->tokens);
-			exit(127);
-		}
-		if (execve(cmd_path, cmd->args, envp) == -1)
-		{
+			cmd_path = get_cmd_path(cmd->args[0], data->env_list);
+			if (!cmd_path)
+			{
+				perror("command not found");
+				free_envp(envp);
+				free_tokens(data->tokens);
+				exit(127);
+			}
+			execve(cmd_path, cmd->args, envp);
 			perror("execve");
 			free(cmd_path);
 			free_envp(envp);
 			exit(EXIT_FAILURE);
 		}
+		free_envp(envp);
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{
@@ -142,5 +151,6 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 			close(cmd->infile_fd);
 			cmd->infile_fd = -1;
 		}
+		free_envp(envp);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:47 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/24 19:51:24 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/11 15:08:57 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,13 @@ void	free_env_list(t_env *env)
 
 	while (env)
 	{
-		tmp = env;
-		env = env->next;
-		free(tmp->key);
-		free(tmp->value);
-		free(tmp);
+		tmp = env->next;
+		if (env->key)
+			free(env->key);
+		if (env->value)
+			free(env->value);
+		free(env);
+		env = tmp;
 	}
 }
 

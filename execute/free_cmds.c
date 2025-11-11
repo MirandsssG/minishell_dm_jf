@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:06:28 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 00:13:00 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/11/11 14:49:36 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,12 @@ void	free_cmds(t_cmd *cmd)
 		if (cmd->outfile)
 			free(cmd->outfile);
 		if (cmd->heredoc_delim)
+		{
+			i = 0;
+			while (cmd->heredoc_delim[i])
+				free(cmd->heredoc_delim[i++]);
 			free(cmd->heredoc_delim);
+		}
 		free(cmd);
 		cmd = tmp;
 	}	
