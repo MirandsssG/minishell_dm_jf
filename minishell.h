@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/11 14:23:38 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/12/03 23:50:26 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_cmd
 	int		heredoc;
 	char	**heredoc_delim;
 	struct	s_cmd *next;
-} t_cmd;
+}	t_cmd;
 
 
 
