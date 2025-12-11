@@ -14,3 +14,5 @@ algum leak enquanto estava a testar, (cat minishell.h | grep char > out) escrevi
 ==41397==    by 0x10CCC4: parse_cmds (parse_cmds.c:76)
 ==41397==    by 0x10ADE2: parse_and_exec (parse_and_exec.c:81)
 ==41397==    by 0x1095F0: main (main.c:45)
+
+preciso de dar run dos buitins que mudam o estado do pai no pai e nao no filho!!!
