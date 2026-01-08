@@ -6,44 +6,46 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 22:14:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/12/10 22:51:15 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/08 23:06:06 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*
- * Simple pipeline executor.
- * For each command in the list:
- *  - create a pipe for the next command (if any)
- *  - fork a child
- *  - in the child: connect prev pipe read end to STDIN, next pipe write end to STDOUT
- *    apply infile/heredoc/outfile redirections, then execute builtin or external
- *  - in the parent: close unused fds and continue
- * At the end, wait for all children and set data->last_exit_status to the last child's status.
- */
-
-static char *get_cmd_path(char *cmd, t_env *env_list)
+char	*ft_strjoin3(char *str1, char *separator, char *str2)
 {
-	char    **paths;
-	char    *full_path;
-	char    *path;
-	char    *tmp;
-	int     i;
+	char	*temp;
+	char	*final;
 
-	if (ft_strchr(cmd, '/'))
-		return (ft_strdup(cmd));
-	path = get_env_value("PATH", env_list);
-	if (!path)
-		return (NULL);
-	paths = ft_split(path, ':');
-	if (!paths)
-		return (NULL);
+	temp = ft_strjoin(str1, separator);
+	final = ft_strjoin(temp, str2);
+	free(temp);
+	return (final);
+}
+
+char	*get_path_from_env(char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
+			return (envp[i] + 5);
+		i++;
+	}
+	return (NULL);
+}
+
+char	*search_path(char **paths, char *cmd)
+{
+	int		i;
+	char	*full_path;
+
 	i = 0;
 	while (paths[i])
 	{
-		tmp = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin_free(tmp, cmd);
+		full_path = ft_strjoin3(paths[i], "/", cmd);
 		if (access(full_path, X_OK) == 0)
 		{
 			free_split(paths);
@@ -56,6 +58,76 @@ static char *get_cmd_path(char *cmd, t_env *env_list)
 	return (NULL);
 }
 
+char	*find_command_path(char *cmd, char **envp)
+{
+	char	**paths;
+	char	*path_env;
+
+	if (ft_strchr(cmd, '/'))
+		return (ft_strdup(cmd));
+	path_env = get_path_from_env(envp);
+	if (!path_env)
+		return (NULL);
+	paths = ft_split(path_env, ':');
+	if (!paths)
+		return (NULL);
+	return (search_path(paths, cmd));
+}
+
+void	child_process(t_cmd *cmd, t_data *data, int *prev_fd, pid_t pid, int *fd)
+{
+	char **envp;
+	char *cmd_path;
+	
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+    	signal(SIGQUIT, SIG_DFL);
+		if (*prev_fd != -1)
+		{
+			if (dup2(*prev_fd, STDIN_FILENO) == -1)
+				perror("dup2 prev_fd");
+			close(*prev_fd);
+		}
+		if (cmd->next)
+		{
+			if (dup2(fd[1], STDOUT_FILENO) == -1)
+				perror("dup2 pipe write");
+			close(fd[0]);
+			close(fd[1]);
+		}
+		heredoc_infile(cmd);
+		if (redirection_infile(cmd) == -1)
+			exit(EXIT_FAILURE);
+		if (redirection_outfile(cmd) == -1)
+			exit(EXIT_FAILURE);
+		if ((!cmd->args || !cmd->args[0]) && !cmd->heredoc)
+			exit(execute_builtin(data, cmd));
+		if (cmd->args && cmd->args[0])
+		{
+			if (is_builtin(cmd->args[0]))
+				exit(execute_builtin(data, cmd));
+			else
+			{
+				envp = env_list_to_envp(data->env_list);
+				cmd_path = find_command_path(cmd->args[0], envp);
+				if (!cmd_path)
+				{
+					fprintf(stderr, "%s: command not found\n", cmd->args[0]);
+					free_envp(envp);
+					exit(127);
+				}
+				execve(cmd_path, cmd->args, envp);
+				perror("execve");
+				free(cmd_path);
+				free_envp(envp);
+				exit(EXIT_FAILURE);
+			}
+		}
+			exit(EXIT_SUCCESS);
+	}
+}
+
 void	exec_pipes(t_data *data, t_cmd *cmds)
 {
 	int     prev_fd;
@@ -66,13 +138,11 @@ void	exec_pipes(t_data *data, t_cmd *cmds)
 	int     children;
 
 	if (!cmds)
-		return;
-	/* ensure heredocs are processed and cmd->infile_fd set */
-	process_heredocs(cmds);
-
+		return ;
 	prev_fd = -1;
 	children = 0;
 	cmd = cmds;
+	process_heredocs(cmd);
 	while (cmd)
 	{
 		if (cmd->next)
@@ -98,95 +168,7 @@ void	exec_pipes(t_data *data, t_cmd *cmds)
 			}
 			return ;
 		}
-		if (pid == 0)
-		{
-			/* child */
-			if (prev_fd != -1)
-			{
-				if (dup2(prev_fd, STDIN_FILENO) == -1)
-					perror("dup2 prev_fd");
-				close(prev_fd);
-			}
-			if (cmd->next)
-			{
-				if (dup2(fd[1], STDOUT_FILENO) == -1)
-					perror("dup2 pipe write");
-				close(fd[0]);
-				close(fd[1]);
-			}
-			/* handle heredoc / infile_fd */
-			if (cmd->infile_fd > 0)
-			{
-				if (dup2(cmd->infile_fd, STDIN_FILENO) == -1)
-					perror("dup2 infile_fd");
-				close(cmd->infile_fd);
-			}
-			else if (cmd->infile)
-			{
-				int infile_fd = open(cmd->infile, O_RDONLY);
-				if (infile_fd < 0)
-				{
-					perror("open infile");
-					exit(1);
-				}
-				if (dup2(infile_fd, STDIN_FILENO) == -1)
-				{
-					perror("dup2 infile");
-					close(infile_fd);
-					exit(1);
-				}
-				close(infile_fd);
-			}
-			/* handle outfile */
-			if (cmd->outfile)
-			{
-				int flags = O_WRONLY | O_CREAT;
-				if (cmd->append)
-					flags |= O_APPEND;
-				else
-					flags |= O_TRUNC;
-				int outfile_fd = open(cmd->outfile, flags, 0644);
-				if (outfile_fd < 0)
-				{
-					perror("open outfile");
-					exit(1);
-				}
-				if (dup2(outfile_fd, STDOUT_FILENO) == -1)
-				{
-					perror("dup2 outfile");
-					close(outfile_fd);
-					exit(1);
-				}
-				close(outfile_fd);
-			}
-
-			/* execute builtin or external */
-			if ((!cmd->args || !cmd->args[0]) && !cmd->heredoc)
-				exit(execute_builtin(data, cmd));
-			if (cmd->args && cmd->args[0])
-			{
-				if (is_builtin(cmd->args[0]))
-					exit(execute_builtin(data, cmd));
-				else
-				{
-					char **envp = env_list_to_envp(data->env_list);
-					char *cmd_path = get_cmd_path(cmd->args[0], data->env_list);
-					if (!cmd_path)
-					{
-						fprintf(stderr, "%s: command not found\n", cmd->args[0]);
-						free_envp(envp);
-						exit(127);
-					}
-					execve(cmd_path, cmd->args, envp);
-					perror("execve");
-					free(cmd_path);
-					free_envp(envp);
-					exit(EXIT_FAILURE);
-				}
-			}
-			exit(EXIT_SUCCESS);
-		}
-		/* parent */
+		child_process(cmd, data, &prev_fd, pid, fd);
 		children++;
 		if (prev_fd != -1)
 			close(prev_fd);
@@ -199,11 +181,11 @@ void	exec_pipes(t_data *data, t_cmd *cmds)
 			prev_fd = -1;
 		cmd = cmd->next;
 	}
-	/* wait for children */
 	while (children-- > 0)
 	{
-		if (wait(&status) == -1)
-			break;
+		signal(SIGINT, SIG_IGN);
+		waitpid(pid, &status, 0);
+		signal(SIGINT, ctrlc_handler);
 		if (WIFEXITED(status))
 			data->last_exit_status = WEXITSTATUS(status);
 	}

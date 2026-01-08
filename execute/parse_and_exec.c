@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_exec.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/11 14:12:50 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/08 22:51:05 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,19 @@
 
 void	execute(t_data *data, t_cmd *cmds)
 {
+	if (cmds && cmds->args && is_builtin(cmds->args[0]) && cmds->next == NULL)
+	{	
+		data->last_exit_status = execute_builtin_with_redirections(data, cmds);
+		return ;
+	}
 	if (cmds->next)
 	{
-		printf("exec with pipes\n");
+		// printf("exec with pipes\n");
 		exec_pipes(data, cmds);
 	}
 	else
 	{
-		printf("exec without pipes\n");
+		// printf("exec without pipes\n");
 		exec_without_pipes(data, cmds);
 	}
 }
@@ -59,7 +64,6 @@ void	execute(t_data *data, t_cmd *cmds)
 void	parse_and_exec(t_data *data)
 {
 	t_cmd	*cmds;
-	int		status;
 
 	if (has_unclosed_quotes(data->input))
 	{
@@ -86,13 +90,7 @@ void	parse_and_exec(t_data *data)
 		return;
 	}
 	// print_cmds(cmds);
-	if (cmds && cmds->args && is_builtin(cmds->args[0]) && cmds->next == NULL)
-	{
-		status = execute_builtin_with_redirections(data, cmds);
-		data->last_exit_status = status;
-	}
-	else
-		execute(data, cmds);
+	execute(data, cmds);
 	free_cmds(cmds);
 	free_split(data->tokens);
 	data->tokens = NULL;

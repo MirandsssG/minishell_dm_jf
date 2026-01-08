@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/11 14:23:38 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/08 22:28:37 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,14 @@ char	*get_env_value(const char *key, t_env *env);
 
 // Execute
 
+char	*find_command_path(char *cmd, char **envp);
+
+char	*search_path(char **paths, char *cmd);
+
+char	*get_path_from_env(char **envp);
+
+char	*ft_strjoin3(char *str1, char *separator, char *str2);
+
 void	parse_and_exec(t_data *data);
 
 void	execute(t_data *data, t_cmd *cmds);
@@ -121,6 +129,14 @@ void	exec_without_pipes(t_data *data, t_cmd *cmds);
 void	free_cmds(t_cmd *cmd);
 
 void	process_heredocs(t_cmd *cmds);
+
+int		heredoc_infile(t_cmd *cmd);
+
+int		redirection_infile(t_cmd *cmd);
+
+int		redirection_outfile(t_cmd *cmd);
+
+
 
 // Parsing
 

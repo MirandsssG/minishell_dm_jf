@@ -7,7 +7,7 @@ cat < a.txt (nao existe) -- still reachable
 << eof - still reachable
 
 
-algum leak enquanto estava a testar, (cat minishell.h | grep char > out) escrevi assim sem queres, secalhar foi isto (cat minishell.h > grep char > out)
+algum leak enquanto estava a testar, (cat minishell.h | grep char > out) escrevi assim sem querer, secalhar foi isto (cat minishell.h > grep char > out)
 ==41397== 5 bytes in 1 blocks are definitely lost in loss record 1 of 87
 ==41397==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
 ==41397==    by 0x10D481: ft_strdup (in /home/vboxuser/Documents/42/git/Common-Core/minishell_group/minishell)

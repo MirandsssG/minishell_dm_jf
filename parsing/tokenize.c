@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:23:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/07 15:44:51 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2025/12/30 19:29:28 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	tokenize_inputs(t_data *data)
 	{
 		while (is_space(data->input[data->i]))
 			data->i++;
-		if (!data->input[data->i]) 
+		if (!data->input[data->i])
 			break;
 		if ((data->input[data->i] == '>' && data->input[data->i + 1] == '>') ||
 			(data->input[data->i] == '<' && data->input[data->i + 1] == '<'))

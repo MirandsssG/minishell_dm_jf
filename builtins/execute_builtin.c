@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/24 19:44:01 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/08 18:21:19 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,41 +33,51 @@ int	execute_builtin(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
+int	heredoc_infile(t_cmd *cmd)
+{
+	if (cmd->infile_fd > 0)
+	{
+		if (dup2(cmd->infile_fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2 infile");
+			close (cmd->infile_fd);
+			return (-1);
+		}
+		close(cmd->infile_fd);
+	}
+	return (0);
+}
+
+int	redirection_infile(t_cmd *cmd)
 {
 	int		infile_fd;
-	int		outfile_fd;
-	int		flags;
-	int		stdin_copy;
-	int		stdout_copy;
-	int		ret;
-	
+
 	infile_fd = -1;
-	outfile_fd = -1;
-	ret = -1;
-	stdin_copy = dup(STDIN_FILENO);
-	stdout_copy = dup(STDOUT_FILENO);
-	if (stdin_copy == -1 || stdout_copy == -1)
-	{
-		perror("dup");
-		return (-1);
-	}
 	if (cmd->infile)
 	{
 		infile_fd = open(cmd->infile, O_RDONLY);
 		if (infile_fd < 0)
 		{
 			perror("open infile");
-			goto restore;
+			return (-1);
 		}
 		if (dup2(infile_fd, STDIN_FILENO) == -1)
 		{
 			perror("dup2 infile");
 			close (infile_fd);
-			goto restore;
+			return (-1);
 		}
 		close(infile_fd);
 	}
+	return (0);
+}
+
+int	redirection_outfile(t_cmd *cmd)
+{
+	int		outfile_fd;
+	int		flags;
+
+	outfile_fd = -1;
 	if (cmd->outfile)
 	{
 		flags = O_WRONLY | O_CREAT;
@@ -77,20 +87,36 @@ int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 			flags |= O_TRUNC;
 		outfile_fd = open(cmd->outfile, flags, 0644);
 		if (outfile_fd < 0)
-		{
-			perror("open outfile");
-			goto restore;
-		}
+			return (perror("open outfile"), -1);
 		if (dup2(outfile_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 outfile");
 			close(outfile_fd);
-			goto restore;
+			return (-1);
 		}
 		close(outfile_fd);
 	}
+	return (0);
+}
+int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
+{
+	int		stdin_copy;
+	int		stdout_copy;
+	int		ret;
+	
+	ret = -1;
+	stdin_copy = dup(STDIN_FILENO);
+	stdout_copy = dup(STDOUT_FILENO);
+	process_heredocs(cmd);
+	if (stdin_copy == -1 || stdout_copy == -1)
+		return (perror("dup"),	close(stdin_copy), close(stdout_copy), ret);
+	if (heredoc_infile(cmd) == -1)
+		goto restore;
+	if (redirection_infile(cmd) == -1)
+		goto restore;
+	if (redirection_outfile(cmd) == -1)
+		goto restore;
 	ret = execute_builtin(data, cmd);
-
 restore:
 	if (dup2(stdin_copy, STDIN_FILENO) == -1)
 		perror("dup2 restore stdin");

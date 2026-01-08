@@ -3,22 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:53:55 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/04 17:22:29 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/08 22:50:27 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ctrlc_handler(int sig)
+void	ctrlc_handler(int sig)
 {
-    (void)sig;
-    rl_replace_line("", 0);
-    write(1, "\n", 1);
-    rl_on_new_line();
-    rl_redisplay();
+	(void)sig;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	
 }
 
 int	main(int ac, char **av, char **envp)
