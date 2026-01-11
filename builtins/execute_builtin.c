@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/08 18:21:19 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/11 02:43:48 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	heredoc_infile(t_cmd *cmd)
 		{
 			perror("dup2 infile");
 			close (cmd->infile_fd);
-			return (-1);
+			return (1);
 		}
 		close(cmd->infile_fd);
 	}
@@ -59,13 +59,13 @@ int	redirection_infile(t_cmd *cmd)
 		if (infile_fd < 0)
 		{
 			perror("open infile");
-			return (-1);
+			return (1);
 		}
 		if (dup2(infile_fd, STDIN_FILENO) == -1)
 		{
 			perror("dup2 infile");
 			close (infile_fd);
-			return (-1);
+			return (1);
 		}
 		close(infile_fd);
 	}
@@ -87,12 +87,12 @@ int	redirection_outfile(t_cmd *cmd)
 			flags |= O_TRUNC;
 		outfile_fd = open(cmd->outfile, flags, 0644);
 		if (outfile_fd < 0)
-			return (perror("open outfile"), -1);
+			return (perror("open outfile"), 1);
 		if (dup2(outfile_fd, STDOUT_FILENO) == -1)
 		{
 			perror("dup2 outfile");
 			close(outfile_fd);
-			return (-1);
+			return (1);
 		}
 		close(outfile_fd);
 	}
@@ -104,7 +104,7 @@ int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 	int		stdout_copy;
 	int		ret;
 	
-	ret = -1;
+	ret = 1;
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
 	process_heredocs(cmd);
@@ -116,7 +116,7 @@ int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 		goto restore;
 	if (redirection_outfile(cmd) == -1)
 		goto restore;
-	ret = execute_builtin(data, cmd);
+	return (ret = execute_builtin(data, cmd), ret);
 restore:
 	if (dup2(stdin_copy, STDIN_FILENO) == -1)
 		perror("dup2 restore stdin");

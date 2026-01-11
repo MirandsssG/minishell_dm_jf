@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:53:55 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/08 22:50:27 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/11 03:24:08 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,12 @@ void	ctrlc_handler(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
-
+	
 	(void)ac;
 	(void)av;
 	ft_memset(&data, 0, sizeof(t_data));

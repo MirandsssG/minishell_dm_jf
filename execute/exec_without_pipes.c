@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/08 22:45:13 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/10 00:41:19 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ static void child_setup_and_exec(t_data *data, t_cmd *cmd, char **envp)
 {
 	int infile_fd;
 	
-	signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
 	if (cmd->infile_fd > 0)
 	{
 		if (dup2(cmd->infile_fd, STDIN_FILENO) == -1)
@@ -113,6 +111,11 @@ static void child_setup_and_exec(t_data *data, t_cmd *cmd, char **envp)
 		{
 			perror(cmd->args[0]);
 			exit(127);
+		}
+		if (is_directory(cmd_path))
+		{
+			fprintf(stderr, "%s: Is a directory\n", cmd->args[0]);
+			exit(126);
 		}
 		if (access(cmd_path, X_OK) != 0)
 		{

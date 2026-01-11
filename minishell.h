@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/08 22:28:37 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/11 02:10:38 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 
 # include "includes/libft/libft.h"
 
@@ -34,23 +35,6 @@ typedef struct s_env
 	char		*value;
 	struct	s_env *next;
 } t_env;
-
-typedef	struct s_data
-{
-	char		*input;
-	char		**tokens;
-	size_t		k;
-	size_t		j;
-	int			var_start;
-	char		*var_name;
-	size_t		var_i;
-	t_env		*env_list;
-	int			should_exit;
-	int			last_exit_status;
-	int			i;
-	int			in_single;
-	int			in_double;
-}	t_data;
 
 typedef struct s_cmd
 {
@@ -63,6 +47,25 @@ typedef struct s_cmd
 	char	**heredoc_delim;
 	struct	s_cmd *next;
 } t_cmd;
+
+typedef	struct s_data
+{
+	char		*input;
+	char		**tokens;
+	size_t		k;
+	size_t		j;
+	int			var_start;
+	char		*var_name;
+	size_t		var_i;
+	t_env		*env_list;
+	t_cmd		*cmd;
+	int			should_exit;
+	int			last_exit_status;
+	int			i;
+	int			in_single;
+	int			in_double;
+}	t_data;
+
 
 
 
@@ -165,5 +168,9 @@ char	*ft_strcpy(char *dest, const char *src);
 char	*ft_strjoin_free_expand(char *s1, char *s2, int free1, int free2);
 
 void	ctrlc_handler(int sig);
+
+int		is_directory(char *path);
+
+void	cleanup(t_data *data);
 
 #endif

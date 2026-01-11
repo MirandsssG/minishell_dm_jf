@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:19:53 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/11 15:19:07 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/09 21:08:38 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,17 @@ t_env	*init_env(char **envp)
 	
 	while (*envp)
 	{
+		int lvl = 0;
 		key = get_key(*envp);
 		value = get_value(*envp);
+		if (ft_strcmp(key, "SHLVL") == 0)
+		{
+			lvl = ft_atoi(value);
+			if (lvl < 0)
+				lvl = 0;
+			free(value);
+			value = ft_itoa(lvl + 1);
+		}
 		new = new_env_node(key, value);
 		free(key);
 		free(value);
