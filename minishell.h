@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/11 02:10:38 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 12:21:44 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,31 @@ int		is_builtin(const char *cmd);
 t_cmd	*parse_cmds(char **tokens);
 
 int		has_unclosed_quotes(const char *line);
+
+int		handle_quotes(char c, t_data *data);
+
+int		handle_special_dollar(const char *token, t_data *data,
+									char **result, int *i);
+									
+int		handle_env_var(const char *token, t_data *data,
+							char **result, int *i);
+							
+void	process_char(const char *token, t_data *data,
+							char **result, int *i);
+							
+void	init_tokens(t_data *data);
+
+int		handle_double_operator(t_data *data);
+
+int		handle_single_operator(t_data *data);
+
+char	*read_part(t_data *data);
+
+void	handle_word(t_data *data);
+
+int		is_special(char c);
+
+int		is_space(char c);
 
 // Utils
 
