@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:47 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/11 03:18:33 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 01:31:20 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,27 +61,30 @@ static int	ft_strdigit(char *str)
 	}
 	return (1);
 }
-int	exit_builtin(t_data *data)
+int	exit_builtin(t_data *data, t_cmd *cmd)
 {
 	int	status;
-	t_cmd *cmd;
-
-	cmd = data->cmd;
+	if (!cmd)
+		cmd = data->cmd;
 	status = 0;
 	if (cmd->args[1] && cmd->args[2])
 	{
 		fprintf(stderr, "%s: too many arguments\n", cmd->args[0]);
-		return (data->last_exit_status = 1, 1);
+		data->last_exit_status = 1;
+		return (1);
 	}
 	if (cmd->args[1] && ft_strdigit(cmd->args[1]) == 0)
 	{
 		fprintf(stderr, "exit: %s: numeric argument required\n", cmd->args[1]);
-		return (2);
+		data->should_exit = 1;
+		printf("exit\n");
+		return (data->last_exit_status = 2, 2);
 	}
-	if (data->cmd->args[1])
+	if (cmd->args && cmd->args[1])
 		status = ft_atoi(cmd->args[1]);
 	else
 		status = data->last_exit_status;
+	data->should_exit = 1;
 	printf("exit\n");
 	return (status);
 }

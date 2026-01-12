@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/11 02:43:48 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 04:56:05 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	execute_builtin(t_data *data, t_cmd *cmd)
 	if (ft_strcmp(cmd->args[0], "env") == 0)
 		return (env_builtin(data));
 	if (ft_strcmp(cmd->args[0], "exit") == 0)
-		return (exit_builtin(data));
+		return (exit_builtin(data, cmd));
 	return (0);
 }
 
@@ -107,7 +107,11 @@ int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 	ret = 1;
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
-	process_heredocs(cmd);
+	if (process_heredocs(cmd, data) == -1)
+	{
+		ret = data->last_exit_status;
+		goto restore;
+	}
 	if (stdin_copy == -1 || stdout_copy == -1)
 		return (perror("dup"),	close(stdin_copy), close(stdout_copy), ret);
 	if (heredoc_infile(cmd) == -1)
@@ -116,7 +120,8 @@ int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 		goto restore;
 	if (redirection_outfile(cmd) == -1)
 		goto restore;
-	return (ret = execute_builtin(data, cmd), ret);
+	ret = execute_builtin(data, cmd);
+	goto restore;
 restore:
 	if (dup2(stdin_copy, STDIN_FILENO) == -1)
 		perror("dup2 restore stdin");

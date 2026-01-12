@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/11 02:10:38 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 01:19:33 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # include <sys/stat.h>
 
 # include "includes/libft/libft.h"
+
+extern volatile sig_atomic_t exit_signal;
 
 typedef struct s_env
 {
@@ -81,7 +83,7 @@ int		echo_builtin(t_cmd *cmd);
 
 int		env_builtin(t_data *data);
 
-int		exit_builtin(t_data *data);
+int		exit_builtin(t_data *data, t_cmd *cmd);
 
 void	free_tokens(char **tokens);
 
@@ -131,7 +133,7 @@ void	exec_without_pipes(t_data *data, t_cmd *cmds);
 
 void	free_cmds(t_cmd *cmd);
 
-void	process_heredocs(t_cmd *cmds);
+int		process_heredocs(t_cmd *cmds, t_data *data);
 
 int		heredoc_infile(t_cmd *cmd);
 
@@ -171,6 +173,6 @@ void	ctrlc_handler(int sig);
 
 int		is_directory(char *path);
 
-void	cleanup(t_data *data);
+void	sig_heredoc(int sig);
 
 #endif

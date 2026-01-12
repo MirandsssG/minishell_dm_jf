@@ -6,20 +6,13 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:53:55 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/11 03:24:08 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 04:47:04 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ctrlc_handler(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+volatile sig_atomic_t exit_signal = 0;
 
 int	main(int ac, char **av, char **envp)
 {
@@ -29,7 +22,6 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	ft_memset(&data, 0, sizeof(t_data));
 	data.env_list = init_env(envp);
-	
 	signal(SIGINT, ctrlc_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
@@ -39,6 +31,15 @@ int	main(int ac, char **av, char **envp)
 		{
 			printf("exit\n");
 			break;
+		}
+		/* If ctrl+c was received while waiting for input, propagate status 130 */
+		if (exit_signal)
+		{
+			data.last_exit_status = exit_signal;
+			exit_signal = 0;
+			free(data.input);
+			data.input = NULL;
+			continue;
 		}
 		if (*data.input)
 			add_history(data.input);
@@ -52,5 +53,5 @@ int	main(int ac, char **av, char **envp)
 	free_tokens(data.tokens);
 	if (data.env_list)
 		free_env_list(data.env_list);
-	return (0);
+	return (data.last_exit_status);
 }
