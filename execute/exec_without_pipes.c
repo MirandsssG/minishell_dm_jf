@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/10 00:41:19 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 04:56:05 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ static void parent_wait_and_cleanup(t_data *data, pid_t pid, t_cmd *cmd,
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		data->last_exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		data->last_exit_status = 128 + WTERMSIG(status);
 	signal(SIGINT, ctrlc_handler);
 	if (cmd->heredoc && cmd->infile_fd > 0)
 	{
@@ -162,7 +164,8 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 		execute_builtin_with_redirections(data, cmd);
 		return;
 	}
-	process_heredocs(cmd);
+	if (process_heredocs(cmd, data) == -1)
+		return;
 	envp = env_list_to_envp(data->env_list);
 	if (!envp)
 		return;

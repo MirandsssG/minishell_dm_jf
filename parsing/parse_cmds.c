@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cmds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 23:45:08 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/11/11 15:02:11 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/12 01:26:22 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ t_cmd	*parse_cmds(char **tokens)
 	while (tokens[i])
 	{
 		t_cmd *new_cmd = ft_calloc(1, sizeof(t_cmd));
+		if (!new_cmd)
+			return (NULL);
+		new_cmd->infile_fd = -1;
 		new_cmd->args = ft_calloc(100, sizeof(char*));
 		arg_i = 0;
 		heredoc_count = 0;

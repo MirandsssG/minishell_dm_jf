@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 22:14:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/09 21:09:55 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 04:56:05 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ void	exec_pipes(t_data *data, t_cmd *cmds)
 	prev_fd = -1;
 	children = 0;
 	cmd = cmds;
-	process_heredocs(cmd);
+	if (process_heredocs(cmd, data) == -1)
+		return ;
 	while (cmd)
 	{
 		if (cmd->next)
@@ -122,9 +123,11 @@ void	exec_pipes(t_data *data, t_cmd *cmds)
 	while (children-- > 0)
 	{
 		signal(SIGINT, SIG_IGN);
-		waitpid(pid, &status, 0);
+		wait(&status);
 		signal(SIGINT, ctrlc_handler);
 		if (WIFEXITED(status))
 			data->last_exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			data->last_exit_status = 128 + WTERMSIG(status);
 	}
 }

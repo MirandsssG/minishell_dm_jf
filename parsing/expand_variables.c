@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 11:59:33 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/12 15:20:11 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
