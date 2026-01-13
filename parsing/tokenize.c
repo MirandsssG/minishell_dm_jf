@@ -6,18 +6,18 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:23:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 12:21:37 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/12 18:09:01 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		is_special(char c)
+int	is_special(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
 }
 
-int		is_space(char c)
+int	is_space(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n'
 		|| c == '\v' || c == '\f' || c == '\r');
