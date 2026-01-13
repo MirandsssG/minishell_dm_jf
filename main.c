@@ -6,18 +6,42 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:53:55 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 04:47:04 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 21:47:24 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t exit_signal = 0;
+volatile sig_atomic_t	g_exit_signal = 0;
+
+static int	sig_ctrl(t_data *data)
+{
+	if (g_exit_signal)
+	{
+		data->last_exit_status = g_exit_signal;
+		g_exit_signal = 0;
+		if (data->input == NULL || data->input[0] == '\0')
+		{
+			free(data->input);
+			data->input = NULL;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+static void	cleanup(t_data *data)
+{
+	free(data->input);
+	free_tokens(data->tokens);
+	if (data->env_list)
+		free_env_list(data->env_list);
+}
 
 int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
-	
+
 	(void)ac;
 	(void)av;
 	ft_memset(&data, 0, sizeof(t_data));
@@ -30,28 +54,17 @@ int	main(int ac, char **av, char **envp)
 		if (!data.input)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
-		/* If ctrl+c was received while waiting for input, propagate status 130 */
-		if (exit_signal)
-		{
-			data.last_exit_status = exit_signal;
-			exit_signal = 0;
-			free(data.input);
-			data.input = NULL;
-			continue;
-		}
+		if (sig_ctrl(&data))
+			continue ;
 		if (*data.input)
 			add_history(data.input);
 		parse_and_exec(&data);
 		free(data.input);
 		data.input = NULL;
 		if (data.should_exit)
-			break;
+			break ;
 	}
-	free(data.input);
-	free_tokens(data.tokens);
-	if (data.env_list)
-		free_env_list(data.env_list);
-	return (data.last_exit_status);
+	return (cleanup(&data), data.last_exit_status);
 }

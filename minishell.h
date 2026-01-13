@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 15:16:51 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/12 21:42:44 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 
 # include "includes/libft/libft.h"
 
-extern volatile sig_atomic_t exit_signal;
+extern volatile sig_atomic_t g_exit_signal;
 
 typedef struct s_env
 {

@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 04:56:05 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/13 03:35:24 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,39 +20,6 @@
 // 			return (env_list->value);
 // 		env_list = env_list->next;
 // 	}
-// 	return (NULL);
-// }
-
-// static char	*get_cmd_path(char *cmd, t_env *env_list)
-// {
-// 	char	**paths;
-// 	char	*full_path;
-// 	char	*path;
-// 	char	*tmp;
-// 	int		i;
-
-// 	if (ft_strchr(cmd, '/'))
-// 		return (ft_strdup(cmd));
-// 	path = get_env_var("PATH", env_list);
-// 	if (!path)
-// 		return (NULL);
-// 	paths = ft_split(path, ':');
-// 	if (!paths)
-// 		return (NULL);
-// 	i = 0;
-// 	while (paths[i])
-// 	{
-// 		tmp = ft_strjoin(paths[i], "/");
-// 		full_path = ft_strjoin_free(tmp, cmd);
-// 		if (access(full_path, X_OK) == 0)
-// 		{
-// 			free_split(paths);
-// 			return (full_path);
-// 		}
-// 		free(full_path);
-// 		i++;
-// 	}
-// 	free_split(paths);
 // 	return (NULL);
 // }
 

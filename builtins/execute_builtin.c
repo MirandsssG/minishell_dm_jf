@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 04:56:05 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/13 03:17:41 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,36 +98,67 @@ int	redirection_outfile(t_cmd *cmd)
 	}
 	return (0);
 }
-int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
+
+static int save_stdio(int *in_save, int *out_save)
 {
-	int		stdin_copy;
-	int		stdout_copy;
-	int		ret;
-	
-	ret = 1;
-	stdin_copy = dup(STDIN_FILENO);
-	stdout_copy = dup(STDOUT_FILENO);
+	*in_save = dup(STDIN_FILENO);
+	*out_save = dup(STDOUT_FILENO);
+	if (*in_save == -1 || *out_save == -1)
+	{
+		perror("dup");
+		if (*in_save != -1)
+			close(*in_save);
+		if (*out_save != -1)
+			close(*out_save);
+		return (-1);
+	}
+	return (0);
+}
+
+static void restore_stdio(int in_save, int out_save)
+{
+	if (dup2(in_save, STDIN_FILENO) == -1)
+		perror("dup2 restore stdin");
+	if (dup2(out_save, STDOUT_FILENO) == -1)
+		perror("dup2 restore stdout");
+	close(in_save);
+	close(out_save);
+}
+
+static int setup_redirections(t_data *data, t_cmd *cmd, int *ret_on_abort)
+{
 	if (process_heredocs(cmd, data) == -1)
 	{
-		ret = data->last_exit_status;
-		goto restore;
+		*ret_on_abort = data->last_exit_status;
+		if (cmd && cmd->infile_fd > 0)
+		{
+			close(cmd->infile_fd);
+			cmd->infile_fd = -1;
+		}
+		return (-1);
 	}
-	if (stdin_copy == -1 || stdout_copy == -1)
-		return (perror("dup"),	close(stdin_copy), close(stdout_copy), ret);
-	if (heredoc_infile(cmd) == -1)
-		goto restore;
-	if (redirection_infile(cmd) == -1)
-		goto restore;
-	if (redirection_outfile(cmd) == -1)
-		goto restore;
+	if (heredoc_infile(cmd) != 0)
+		return (-1);
+	if (redirection_infile(cmd) != 0)
+		return (-1);
+	if (redirection_outfile(cmd) != 0)
+		return (-1);
+	return (0);
+}
+int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
+{
+	int stdin_copy;
+	int stdout_copy;
+	int ret = 1;
+
+	if (save_stdio(&stdin_copy, &stdout_copy) == -1)
+		return (ret);
+	if (setup_redirections(data, cmd, &ret) == -1)
+	{
+		restore_stdio(stdin_copy, stdout_copy);
+		return (ret);
+	}
 	ret = execute_builtin(data, cmd);
-	goto restore;
-restore:
-	if (dup2(stdin_copy, STDIN_FILENO) == -1)
-		perror("dup2 restore stdin");
-	if (dup2(stdout_copy, STDOUT_FILENO) == -1)
-		perror("dup2 restore stdout");
-	close(stdin_copy);
-	close(stdout_copy);
+	restore_stdio(stdin_copy, stdout_copy);
 	return (ret);
 }

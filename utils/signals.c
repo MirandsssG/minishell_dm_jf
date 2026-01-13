@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 03:52:46 by tafonso           #+#    #+#             */
-/*   Updated: 2026/01/11 23:59:25 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/13 00:15:07 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ctrlc_handler(int sig)
 {
 	(void)sig;
-	exit_signal = 130;
+	g_exit_signal = 130;
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
