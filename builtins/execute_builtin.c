@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/13 03:17:41 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/13 19:05:13 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,72 +30,6 @@ int	execute_builtin(t_data *data, t_cmd *cmd)
 		return (env_builtin(data));
 	if (ft_strcmp(cmd->args[0], "exit") == 0)
 		return (exit_builtin(data, cmd));
-	return (0);
-}
-
-int	heredoc_infile(t_cmd *cmd)
-{
-	if (cmd->infile_fd > 0)
-	{
-		if (dup2(cmd->infile_fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2 infile");
-			close (cmd->infile_fd);
-			return (1);
-		}
-		close(cmd->infile_fd);
-	}
-	return (0);
-}
-
-int	redirection_infile(t_cmd *cmd)
-{
-	int		infile_fd;
-
-	infile_fd = -1;
-	if (cmd->infile)
-	{
-		infile_fd = open(cmd->infile, O_RDONLY);
-		if (infile_fd < 0)
-		{
-			perror("open infile");
-			return (1);
-		}
-		if (dup2(infile_fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2 infile");
-			close (infile_fd);
-			return (1);
-		}
-		close(infile_fd);
-	}
-	return (0);
-}
-
-int	redirection_outfile(t_cmd *cmd)
-{
-	int		outfile_fd;
-	int		flags;
-
-	outfile_fd = -1;
-	if (cmd->outfile)
-	{
-		flags = O_WRONLY | O_CREAT;
-		if (cmd->append)
-			flags |= O_APPEND;
-		else
-			flags |= O_TRUNC;
-		outfile_fd = open(cmd->outfile, flags, 0644);
-		if (outfile_fd < 0)
-			return (perror("open outfile"), 1);
-		if (dup2(outfile_fd, STDOUT_FILENO) == -1)
-		{
-			perror("dup2 outfile");
-			close(outfile_fd);
-			return (1);
-		}
-		close(outfile_fd);
-	}
 	return (0);
 }
 
