@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:47 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 01:31:20 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/14 19:17:10 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	free_tokens(char **tokens)
 
 	i = 0;
 	if (!tokens)
-		return;
+		return ;
 	while (tokens[i])
 	{
 		free(tokens[i]);
@@ -42,6 +42,7 @@ void	free_env_list(t_env *env)
 		env = tmp;
 	}
 }
+
 static int	ft_strdigit(char *str)
 {
 	int	i;
@@ -61,9 +62,11 @@ static int	ft_strdigit(char *str)
 	}
 	return (1);
 }
+
 int	exit_builtin(t_data *data, t_cmd *cmd)
 {
 	int	status;
+
 	if (!cmd)
 		cmd = data->cmd;
 	status = 0;

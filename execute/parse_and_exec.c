@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 03:51:10 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/14 19:36:28 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	parse_and_exec(t_data *data)
 	{
 		free_split(data->tokens);
 		data->tokens = NULL;
-		return;
+		return ;
 	}
 	// for (int i = 0; data->tokens[i]; i++)
     //     printf("token[%d] = '%s'\n", i, data->tokens[i]);
@@ -87,7 +87,7 @@ void	parse_and_exec(t_data *data)
 	{
 		free_split(data->tokens);
 		data->tokens = NULL;
-		return;
+		return ;
 	}
 	// print_cmds(cmds);
 	execute(data, cmds);

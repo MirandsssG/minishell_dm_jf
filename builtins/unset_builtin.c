@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset_builtin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:39 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 11:12:33 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/14 19:21:05 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	remove_env_var(t_env **env_list, const char *key)
 			free(current->key);
 			free(current->value);
 			free(current);
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;
@@ -43,7 +43,7 @@ int	unset_builtin(t_data *data, t_cmd *cmd)
 	char	**args;
 	int		ret;
 
-	ret = 0;	
+	ret = 0;
 	args = cmd->args;
 	i = 1;
 	while (args[i])

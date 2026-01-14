@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/13 03:35:24 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/14 19:30:51 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 	if ((!cmd->args || !cmd->args[0]) && !cmd->heredoc)
 	{
 		execute_builtin_with_redirections(data, cmd);
-		return;
+		return ;
 	}
 	if (process_heredocs(cmd, data) == -1)
 		return;

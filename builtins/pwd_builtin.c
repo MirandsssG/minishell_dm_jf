@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:06 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 11:11:23 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/14 19:18:41 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

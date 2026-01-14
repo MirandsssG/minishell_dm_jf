@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/16 11:12:24 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/14 19:26:24 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	update_env(t_env **env_list, char *key, char *value)
 				tmp->value = ft_strdup(value);
 			else
 				tmp->value = NULL;
-			return;
+			return ;
 		}
 		tmp = tmp->next;
 	}

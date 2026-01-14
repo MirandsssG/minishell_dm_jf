@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:18:50 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 03:19:07 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/14 19:10:25 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 static t_env	*create_env_node(const char *key, const char *value)
 {
-	t_env	*new = malloc(sizeof(t_env));
+	t_env	*new;
+
+	new = malloc(sizeof(t_env));
 	if (!new)
 		return (NULL);
 	new->key = ft_strdup(key);
@@ -25,23 +27,25 @@ static t_env	*create_env_node(const char *key, const char *value)
 
 static void	add_env_var(t_env **env_list, const char *key, const char *value)
 {
-	t_env *tmp = *env_list;
+	t_env	*tmp;
+	t_env	*new;
 
+	tmp = *env_list;
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->key, key) == 0)
 		{
 			free(tmp->value);
 			tmp->value = ft_strdup(value);
-			return;
+			return ;
 		}
 		if (!tmp->next)
-			break;
+			break ;
 		tmp = tmp->next;
 	}
-	t_env *new = create_env_node(key, value);
+	new = create_env_node(key, value);
 	if (!new)
-		return;
+		return ;
 	if (!*env_list)
 		*env_list = new;
 	else
@@ -50,19 +54,44 @@ static void	add_env_var(t_env **env_list, const char *key, const char *value)
 
 static void	update_env(t_data *data, char *key, char *value)
 {
-	t_env *current = data->env_list;
-	
+	t_env	*current;
+
+	current = data->env_list;
 	while (current)
 	{
 		if (ft_strcmp(current->key, key) == 0)
 		{
 			free(current->value);
 			current->value = ft_strdup(value);
-			return;
+			return ;
 		}
 		current = current->next;
 	}
 	add_env_var(&data->env_list, key, value);
+}
+
+static int	change_directory(char **path, t_cmd *cmd, char **old_pwd)
+{
+	*old_pwd = getcwd(NULL, 0);
+	if (!cmd->args[1])
+	{
+		*path = getenv("HOME");
+		if (!*path)
+		{
+			printf("cd: HOME not set\n");
+			free(*old_pwd);
+			return (1);
+		}
+	}
+	else
+		*path = cmd->args[1];
+	if (chdir(*path) != 0)
+	{
+		perror("cd");
+		free(*old_pwd);
+		return (1);
+	}
+	return (0);
 }
 
 int	cd_builtin(t_data *data, t_cmd *cmd)
@@ -71,25 +100,8 @@ int	cd_builtin(t_data *data, t_cmd *cmd)
 	char	*old_pwd;
 	char	*new_pwd;
 
-	old_pwd = getcwd(NULL, 0);
-	if (!cmd->args[1])
-	{
-		path = getenv("HOME");
-		if (!path)
-		{
-			printf("cd: HOME not set\n");
-			free(old_pwd);
-			return (1);
-		}
-	}
-	else
-		path = cmd->args[1];
-	if (chdir(path) != 0)
-	{
-		perror("cd");
-		free(old_pwd);
+	if (change_directory(&path, cmd, &old_pwd))
 		return (1);
-	}
 	new_pwd = getcwd(NULL, 0);
 	if (!new_pwd)
 	{

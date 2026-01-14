@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:18 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 03:16:14 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/14 19:09:51 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@ int	echo_builtin(t_cmd *cmd)
 	while (cmd->args[i] && cmd->args[i][0] == '-' && cmd->args[i][1] == 'n')
 	{
 		j = 2;
-		while (cmd->args[i][j] == 'n')
-			j++;
-		if (cmd->args[i][j] != '\0')
-			break;
+		while (cmd->args[i][j++] == 'n')
+			if (cmd->args[i][j - 1] != '\0')
+				break ;
 		n_flag = true;
 		i++;
 	}

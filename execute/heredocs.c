@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 12:55:43 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 23:34:48 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/14 19:31:32 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ static void	heredoc_child(const char *delimiter, int pipe_fd[2])
 		if (!line)
 		{
 			ft_putendl_fd("warning: heredoc delimited by end-of-file", 2);
-			break;
+			break ;
 		}
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		ft_putendl_fd(line, pipe_fd[1]);
 		free(line);
@@ -47,7 +47,6 @@ static int	run_heredoc(const char *delimiter)
 
 	if (pipe(pipe_fd) == -1)
 		return (perror("pipe"), -1);
-
 	prev_sigint = signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid < 0)

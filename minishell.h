@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 21:42:44 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/14 19:53:21 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,28 @@
 
 # include "includes/libft/libft.h"
 
-extern volatile sig_atomic_t g_exit_signal;
+extern volatile sig_atomic_t	g_exit_signal;
 
 typedef struct s_env
 {
-	char		*key;
-	char		*value;
-	struct	s_env *next;
-} t_env;
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
 
 typedef struct s_cmd
 {
-	char	**args;
-	char	*infile;
-	int		infile_fd;
-	char	*outfile;
-	int		append;
-	int		heredoc;
-	char	**heredoc_delim;
-	struct	s_cmd *next;
-} t_cmd;
+	char			**args;
+	char			*infile;
+	int				infile_fd;
+	char			*outfile;
+	int				append;
+	int				heredoc;
+	char			**heredoc_delim;
+	struct s_cmd	*next;
+}	t_cmd;
 
-typedef	struct s_data
+typedef struct s_data
 {
 	char		*input;
 	char		**tokens;
@@ -67,9 +67,6 @@ typedef	struct s_data
 	int			in_single;
 	int			in_double;
 }	t_data;
-
-
-
 
 // Builtins
 
@@ -141,8 +138,6 @@ int		redirection_infile(t_cmd *cmd);
 
 int		redirection_outfile(t_cmd *cmd);
 
-
-
 // Parsing
 
 void	tokenize_inputs(t_data *data);
@@ -158,14 +153,14 @@ int		has_unclosed_quotes(const char *line);
 int		handle_quotes(char c, t_data *data);
 
 int		handle_special_dollar(const char *token, t_data *data,
-									char **result, int *i);
-									
+			char **result, int *i);
+
 int		handle_env_var(const char *token, t_data *data,
-							char **result, int *i);
-							
+			char **result, int *i);
+
 void	process_char(const char *token, t_data *data,
-							char **result, int *i);
-							
+			char **result, int *i);
+
 void	init_tokens(t_data *data);
 
 int		handle_double_operator(t_data *data);
@@ -199,5 +194,7 @@ void	ctrlc_handler(int sig);
 int		is_directory(char *path);
 
 void	sig_heredoc(int sig);
+
+int		sig_ctrl(t_data *data);
 
 #endif

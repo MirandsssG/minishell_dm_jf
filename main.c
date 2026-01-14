@@ -6,29 +6,13 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:53:55 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 21:47:24 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/14 19:50:52 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_exit_signal = 0;
-
-static int	sig_ctrl(t_data *data)
-{
-	if (g_exit_signal)
-	{
-		data->last_exit_status = g_exit_signal;
-		g_exit_signal = 0;
-		if (data->input == NULL || data->input[0] == '\0')
-		{
-			free(data->input);
-			data->input = NULL;
-			return (1);
-		}
-	}
-	return (0);
-}
 
 static void	cleanup(t_data *data)
 {

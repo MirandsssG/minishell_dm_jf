@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:24 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/08 15:33:25 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/14 19:13:57 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 int	env_builtin(t_data *data)
 {
-	t_env *current = data->env_list;
-	
+	t_env	*current;
+
+	current = data->env_list;
 	while (current)
 	{
 		if (current->value)

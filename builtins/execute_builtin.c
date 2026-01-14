@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:22:14 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/13 19:05:13 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/14 19:15:49 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	execute_builtin(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-static int save_stdio(int *in_save, int *out_save)
+static int	save_stdio(int *in_save, int *out_save)
 {
 	*in_save = dup(STDIN_FILENO);
 	*out_save = dup(STDOUT_FILENO);
@@ -49,7 +49,7 @@ static int save_stdio(int *in_save, int *out_save)
 	return (0);
 }
 
-static void restore_stdio(int in_save, int out_save)
+static void	restore_stdio(int in_save, int out_save)
 {
 	if (dup2(in_save, STDIN_FILENO) == -1)
 		perror("dup2 restore stdin");
@@ -59,7 +59,7 @@ static void restore_stdio(int in_save, int out_save)
 	close(out_save);
 }
 
-static int setup_redirections(t_data *data, t_cmd *cmd, int *ret_on_abort)
+static int	setup_redirections(t_data *data, t_cmd *cmd, int *ret_on_abort)
 {
 	if (process_heredocs(cmd, data) == -1)
 	{
@@ -79,12 +79,14 @@ static int setup_redirections(t_data *data, t_cmd *cmd, int *ret_on_abort)
 		return (-1);
 	return (0);
 }
+
 int	execute_builtin_with_redirections(t_data *data, t_cmd *cmd)
 {
-	int stdin_copy;
-	int stdout_copy;
-	int ret = 1;
+	int	stdin_copy;
+	int	stdout_copy;
+	int	ret;
 
+	ret = 1;
 	if (save_stdio(&stdin_copy, &stdout_copy) == -1)
 		return (ret);
 	if (setup_redirections(data, cmd, &ret) == -1)
