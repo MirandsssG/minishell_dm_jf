@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_exec.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: diogo <diogo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 19:36:28 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/16 19:29:03 by diogo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ void	parse_and_exec(t_data *data)
 		data->tokens = NULL;
 		return ;
 	}
-	// for (int i = 0; data->tokens[i]; i++)
-    //     printf("token[%d] = '%s'\n", i, data->tokens[i]);
+	for (int i = 0; data->tokens[i]; i++)
+		printf("token[%d] = '%s'\n", i, data->tokens[i]);
 	expand_variables(data);
-	// for (int i = 0; data->tokens[i]; i++)
-    //     printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
+	for (int i = 0; data->tokens[i]; i++)
+        printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
 	cmds = parse_cmds(data->tokens);
 	if (!cmds)
 	{

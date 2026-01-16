@@ -7,6 +7,9 @@
 # As an example, the following command:
 # valgrind --suppressions=valgrind.supp 
 # --leak-check=full --show-leak-kinds=all ./minishell
+# valgrind --suppressions=valgrind.supp --leak-check=ful
+# l --show-leak-kinds=all --track-fds=yes ./minis
+hell
 # 
 # An example of an output can be this one:
 # ==100825== LEAK SUMMARY:
