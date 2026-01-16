@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 19:30:51 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/14 20:11:56 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,5 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 	}
 	if (pid == 0)
 		child_setup_and_exec(data, cmd, envp);
-	else
-		parent_wait_and_cleanup(data, pid, cmd, envp);
+	parent_wait_and_cleanup(data, pid, cmd, envp);
 }

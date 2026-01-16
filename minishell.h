@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 19:53:21 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/16 18:40:11 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,12 @@ int		heredoc_infile(t_cmd *cmd);
 int		redirection_infile(t_cmd *cmd);
 
 int		redirection_outfile(t_cmd *cmd);
+
+char	*expand_heredoc_line(const char *line, t_data *data);
+
+char	*get_heredoc_delim(const char *delim, int *expand);
+
+void	write_heredoc(char *line, int fd, int expand, t_data *data);
 
 // Parsing
 

@@ -6,18 +6,21 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 12:55:43 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 19:31:32 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/16 18:35:12 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	heredoc_child(const char *delimiter, int pipe_fd[2])
+static void	heredoc_child(const char *delimiter, int pipe_fd[2], t_data *data)
 {
 	char	*line;
+	char	*cmp_delim;
+	int		expand;
 
 	signal(SIGINT, sig_heredoc);
 	close(pipe_fd[0]);
+	cmp_delim = get_heredoc_delim(delimiter, &expand);
 	while (1)
 	{
 		line = readline("> ");
@@ -26,19 +29,19 @@ static void	heredoc_child(const char *delimiter, int pipe_fd[2])
 			ft_putendl_fd("warning: heredoc delimited by end-of-file", 2);
 			break ;
 		}
-		if (ft_strcmp(line, delimiter) == 0)
+		if (ft_strcmp(line, cmp_delim) == 0)
 		{
 			free(line);
 			break ;
 		}
-		ft_putendl_fd(line, pipe_fd[1]);
-		free(line);
+		write_heredoc(line, pipe_fd[1], expand, data);
 	}
+	free(cmp_delim);
 	close(pipe_fd[1]);
 	exit(0);
 }
 
-static int	run_heredoc(const char *delimiter)
+static int	run_heredoc(const char *delimiter, t_data *data)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
@@ -55,7 +58,7 @@ static int	run_heredoc(const char *delimiter)
 		return (close(pipe_fd[0]), close(pipe_fd[1]), perror("fork"), -1);
 	}
 	if (pid == 0)
-		heredoc_child(delimiter, pipe_fd);
+		heredoc_child(delimiter, pipe_fd, data);
 	close(pipe_fd[1]);
 	waitpid(pid, &status, 0);
 	signal(SIGINT, prev_sigint);
@@ -77,7 +80,7 @@ static int	process_cmd_heredocs(t_cmd *cmd, t_data *data)
 	i = 0;
 	while (cmd->heredoc_delim[i])
 	{
-		tmp = run_heredoc(cmd->heredoc_delim[i]);
+		tmp = run_heredoc(cmd->heredoc_delim[i], data);
 		if (tmp == -1)
 		{
 			if (fd != -1)
