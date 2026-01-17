@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogo <diogo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/16 19:29:10 by diogo            ###   ########.fr       */
+/*   Updated: 2026/01/17 17:44:21 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,18 @@ void	handle_word(t_data *data);
 int		is_special(char c);
 
 int		is_space(char c);
+
+// Syntax
+
+int		check_syntax(char **tokens, t_data *data);
+
+int		is_pipe(const char *t);
+
+int		is_redirection(const char *t);
+
+int		is_operator(const char *t);
+
+int		is_unsupported(const char *t);
 
 // Utils
 

@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 22:14:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 04:56:05 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/17 19:06:11 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ void	child_process(t_cmd *cmd, t_data *data, int *prev_fd, pid_t pid, int *fd)
 			close(fd[0]);
 			close(fd[1]);
 		}
-		heredoc_infile(cmd);
-		if (redirection_infile(cmd) == -1)
+		if (heredoc_infile(cmd))
 			exit(EXIT_FAILURE);
-		if (redirection_outfile(cmd) == -1)
+		if (redirection_infile(cmd))
+			exit(EXIT_FAILURE);
+		if (redirection_outfile(cmd))
 			exit(EXIT_FAILURE);
 		if ((!cmd->args || !cmd->args[0]) && !cmd->heredoc)
 			exit(execute_builtin(data, cmd));
@@ -51,7 +52,7 @@ void	child_process(t_cmd *cmd, t_data *data, int *prev_fd, pid_t pid, int *fd)
 				cmd_path = find_command_path(cmd->args[0], envp);
 				if (!cmd_path)
 				{
-					fprintf(stderr, "%s: command not found\n", cmd->args[0]);
+					perror("command not found\n");
 					free_envp(envp);
 					exit(127);
 				}

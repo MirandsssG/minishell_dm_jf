@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 20:11:56 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/17 18:38:16 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,72 +23,48 @@
 // 	return (NULL);
 // }
 
-static void child_setup_and_exec(t_data *data, t_cmd *cmd, char **envp)
+static void	check_cmd_path(t_cmd *cmd, t_data *data, char **envp, char *cmd_path)
 {
-	int infile_fd;
-	
-	if (cmd->infile_fd > 0)
+	if (!cmd_path)
 	{
-		if (dup2(cmd->infile_fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2 infile_fd");
-			close(cmd->infile_fd);
-			exit(EXIT_FAILURE);
-		}
-		close(cmd->infile_fd);
+		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		free_envp(envp);
+		free_tokens(data->tokens);
+		exit(127);
 	}
-	else if (cmd->infile)
+	if (access(cmd_path, F_OK) != 0)
 	{
-		infile_fd = open(cmd->infile, O_RDONLY);
-		if (infile_fd < 0)
-		{
-			perror("open infile");
-			exit(EXIT_FAILURE);
-		}
-		dup2(infile_fd, STDIN_FILENO);
-		close(infile_fd);
+		perror(cmd->args[0]);
+		exit(127);
 	}
-	if (cmd->outfile)
+	if (is_directory(cmd_path))
 	{
-		int flags = O_WRONLY | O_CREAT;
-		if (cmd->append)
-			flags |= O_APPEND;
-		else
-			flags |= O_TRUNC;
-		int outfile_fd = open(cmd->outfile, flags, 0644);
-		if (outfile_fd < 0)
-		{
-			perror("open outfile");
-			exit(EXIT_FAILURE);
-		}
-		dup2(outfile_fd, STDOUT_FILENO);
-		close(outfile_fd);
+		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		exit(126);
 	}
+	if (access(cmd_path, X_OK) != 0)
+	{
+		perror(cmd->args[0]);
+		exit(126);
+	}
+}
+
+static void child_setup_and_exec(t_data *data, t_cmd *cmd, char **envp)
+{	
+	char *cmd_path;
+
+	if (heredoc_infile(cmd))
+		exit(EXIT_FAILURE);
+	else if (redirection_infile(cmd))
+		exit(EXIT_FAILURE);
+	if (redirection_outfile(cmd))
+		exit(EXIT_FAILURE);
 	if (cmd->args && cmd->args[0])
 	{
-		char *cmd_path = find_command_path(cmd->args[0], envp);
-		if (!cmd_path)
-		{
-			fprintf(stderr, "%s: command not found\n", cmd->args[0]);
-			free_envp(envp);
-			free_tokens(data->tokens);
-			exit(127);
-		}
-		if (access(cmd_path, F_OK) != 0)
-		{
-			perror(cmd->args[0]);
-			exit(127);
-		}
-		if (is_directory(cmd_path))
-		{
-			fprintf(stderr, "%s: Is a directory\n", cmd->args[0]);
-			exit(126);
-		}
-		if (access(cmd_path, X_OK) != 0)
-		{
-			perror(cmd->args[0]);
-			exit(126);
-		}
+		cmd_path = find_command_path(cmd->args[0], envp);
+		check_cmd_path(cmd, data, envp, cmd_path);
 		execve(cmd_path, cmd->args, envp);
 		perror("execve");
 		free(cmd_path);
@@ -132,16 +108,16 @@ void	exec_without_pipes(t_data *data, t_cmd *cmd)
 		return ;
 	}
 	if (process_heredocs(cmd, data) == -1)
-		return;
+		return ;
 	envp = env_list_to_envp(data->env_list);
 	if (!envp)
-		return;
+		return ;
 	pid = fork();
 	if (pid < 0)
 	{
 		perror ("fork");
 		free_envp(envp);
-		return;
+		return ;
 	}
 	if (pid == 0)
 		child_setup_and_exec(data, cmd, envp);

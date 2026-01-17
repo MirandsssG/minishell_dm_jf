@@ -8,8 +8,7 @@
 # valgrind --suppressions=valgrind.supp 
 # --leak-check=full --show-leak-kinds=all ./minishell
 # valgrind --suppressions=valgrind.supp --leak-check=ful
-# l --show-leak-kinds=all --track-fds=yes ./minis
-hell
+# l --show-leak-kinds=all --track-fds=yes ./minishell
 # 
 # An example of an output can be this one:
 # ==100825== LEAK SUMMARY:
