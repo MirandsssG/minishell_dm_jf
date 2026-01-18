@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:53:55 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 19:50:52 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/18 19:12:27 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,15 @@ static void	cleanup(t_data *data)
 	free_tokens(data->tokens);
 	if (data->env_list)
 		free_env_list(data->env_list);
+}
+
+int	should_exit_free(t_data *data)
+{
+	free(data->input);
+	data->input = NULL;
+	if (data->should_exit)
+		return (1);
+	return (0);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -45,9 +54,7 @@ int	main(int ac, char **av, char **envp)
 		if (*data.input)
 			add_history(data.input);
 		parse_and_exec(&data);
-		free(data.input);
-		data.input = NULL;
-		if (data.should_exit)
+		if (should_exit_free(&data))
 			break ;
 	}
 	return (cleanup(&data), data.last_exit_status);
