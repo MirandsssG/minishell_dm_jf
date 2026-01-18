@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: diogo <diogo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 15:20:11 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/18 01:23:26 by diogo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,13 @@ static char	*expand_token(const char *token, t_data *data)
 	return (temp);
 }
 
+static int	is_heredoc_delimiter(char **tokens, int i)
+{
+	if (i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0)
+		return (1);
+	return (0);
+}
+
 void	expand_variables(t_data *data)
 {
 	int		i;
@@ -66,6 +73,11 @@ void	expand_variables(t_data *data)
 	i = 0;
 	while (data->tokens[i])
 	{
+		if (is_heredoc_delimiter(data->tokens, i))
+		{
+			i++;
+			continue;
+		}
 		expanded = expand_token(data->tokens[i], data);
 		free(data->tokens[i]);
 		data->tokens[i] = expanded;
