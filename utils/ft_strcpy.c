@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 02:24:29 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 18:56:13 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/18 18:47:45 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@ char	*ft_strcpy(char *dest, const char *src)
 	int	i;
 
 	i = 0;
+	if (!src)
+	{
+		dest[0] = '\0';
+		return (dest);
+	}
 	while (src[i])
 	{
 		dest[i] = src[i];

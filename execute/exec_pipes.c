@@ -6,129 +6,100 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 22:14:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/17 19:06:11 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/18 15:33:10 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	child_process(t_cmd *cmd, t_data *data, int *prev_fd, pid_t pid, int *fd)
+static void	setup_child_pipes(t_cmd *cmd, int *prev_fd, int *fd)
 {
-	char **envp;
-	char *cmd_path;
-	
-	if (pid == 0)
+	if (*prev_fd != -1)
 	{
-		// signal(SIGINT, SIG_DFL);
-    	// signal(SIGQUIT, SIG_DFL);
-		if (*prev_fd != -1)
-		{
-			if (dup2(*prev_fd, STDIN_FILENO) == -1)
-				perror("dup2 prev_fd");
-			close(*prev_fd);
-		}
-		if (cmd->next)
-		{
-			if (dup2(fd[1], STDOUT_FILENO) == -1)
-				perror("dup2 pipe write");
-			close(fd[0]);
-			close(fd[1]);
-		}
-		if (heredoc_infile(cmd))
-			exit(EXIT_FAILURE);
-		if (redirection_infile(cmd))
-			exit(EXIT_FAILURE);
-		if (redirection_outfile(cmd))
-			exit(EXIT_FAILURE);
-		if ((!cmd->args || !cmd->args[0]) && !cmd->heredoc)
-			exit(execute_builtin(data, cmd));
-		if (cmd->args && cmd->args[0])
-		{
-			if (is_builtin(cmd->args[0]))
-				exit(execute_builtin(data, cmd));
-			else
-			{
-				envp = env_list_to_envp(data->env_list);
-				cmd_path = find_command_path(cmd->args[0], envp);
-				if (!cmd_path)
-				{
-					perror("command not found\n");
-					free_envp(envp);
-					exit(127);
-				}
-				execve(cmd_path, cmd->args, envp);
-				perror("execve");
-				free(cmd_path);
-				free_envp(envp);
-				exit(EXIT_FAILURE);
-			}
-		}
-			exit(EXIT_SUCCESS);
+		if (dup2(*prev_fd, STDIN_FILENO) == -1)
+			perror("dup2 prev_fd");
+		close(*prev_fd);
 	}
+	if (cmd->next)
+	{
+		if (dup2(fd[1], STDOUT_FILENO) == -1)
+			perror("dup2 pipe write");
+		close(fd[0]);
+		close(fd[1]);
+	}
+}
+
+static void	handle_redirections(t_cmd *cmd)
+{
+	if (heredoc_infile(cmd))
+		exit(EXIT_FAILURE);
+	if (redirection_infile(cmd))
+		exit(EXIT_FAILURE);
+	if (redirection_outfile(cmd))
+		exit(EXIT_FAILURE);
+}
+
+static void	exec_command(t_cmd *cmd, t_data *data)
+{
+	char	**envp;
+	char	*cmd_path;
+
+	if (is_builtin(cmd->args[0]))
+		exit(execute_builtin(data, cmd));
+	else
+	{
+		envp = env_list_to_envp(data->env_list);
+		cmd_path = find_command_path(cmd->args[0], envp);
+		if (!cmd_path)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd->args[0], 2);
+			ft_putendl_fd(": command not found", 2);
+			free_envp(envp);
+			exit(127);
+		}
+		execve(cmd_path, cmd->args, envp);
+		perror("execve");
+		free(cmd_path);
+		free_envp(envp);
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	child_process(t_cmd *cmd, t_data *data, int *prev_fd, int *fd)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	setup_child_pipes(cmd, prev_fd, fd);
+	handle_redirections(cmd);
+	if (cmd->args && cmd->args[0])
+		exec_command(cmd, data);
+	exit(EXIT_SUCCESS);
 }
 
 void	exec_pipes(t_data *data, t_cmd *cmds)
 {
-	int     prev_fd;
-	int     fd[2];
-	pid_t   pid;
-	int     status;
-	t_cmd   *cmd;
-	int     children;
+	int		prev_fd;
+	int		fd[2];
+	pid_t	pid;
+	int		children;
 
-	if (!cmds)
-		return ;
 	prev_fd = -1;
 	children = 0;
-	cmd = cmds;
-	if (process_heredocs(cmd, data) == -1)
+	if (!cmds || process_heredocs(cmds, data) == -1)
 		return ;
-	while (cmd)
+	while (cmds)
 	{
-		if (cmd->next)
-		{
-			if (pipe(fd) == -1)
-			{
-				perror("pipe");
-				if (prev_fd != -1)
-					close(prev_fd);
-				return;
-			}
-		}
+		if (cmds->next && pipe(fd) == -1)
+			return ((void)pipe_error(prev_fd));
 		pid = fork();
 		if (pid < 0)
-		{
-			perror("fork");
-			if (prev_fd != -1)
-				close(prev_fd);
-			if (cmd->next)
-			{
-				close(fd[0]);
-				close(fd[1]);
-			}
-			return ;
-		}
-		child_process(cmd, data, &prev_fd, pid, fd);
+			return ((void)fork_error(prev_fd, fd, cmds->next != NULL));
+		if (pid == 0)
+			child_process(cmds, data, &prev_fd, fd);
 		children++;
-		if (prev_fd != -1)
-			close(prev_fd);
-		if (cmd->next)
-		{
-			close(fd[1]);
-			prev_fd = fd[0];
-		}
-		else
-			prev_fd = -1;
-		cmd = cmd->next;
+		parent_fds(cmds, &prev_fd, fd);
+		cmds = cmds->next;
 	}
-	while (children-- > 0)
-	{
-		signal(SIGINT, SIG_IGN);
-		wait(&status);
-		signal(SIGINT, ctrlc_handler);
-		if (WIFEXITED(status))
-			data->last_exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			data->last_exit_status = 128 + WTERMSIG(status);
-	}
+	wait_children(children, data);
 }

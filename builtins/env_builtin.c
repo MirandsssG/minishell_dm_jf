@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:24 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 19:13:57 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/18 18:40:22 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	env_builtin(t_data *data)
 	{
 		if (current->value)
 			printf("%s=%s\n", current->key, current->value);
+		else
+			printf("%s=\n", current->key);
 		current = current->next;
 	}
 	return (0);

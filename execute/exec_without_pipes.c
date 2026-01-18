@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/17 18:38:16 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/18 16:17:23 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@
 // 	return (NULL);
 // }
 
-static void	check_cmd_path(t_cmd *cmd, t_data *data, char **envp, char *cmd_path)
+static void	check_cmd_path(t_cmd *cmd, t_data *data, char **envp,
+				char *cmd_path)
 {
 	if (!cmd_path)
 	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		free_envp(envp);
@@ -51,9 +53,9 @@ static void	check_cmd_path(t_cmd *cmd, t_data *data, char **envp, char *cmd_path
 	}
 }
 
-static void child_setup_and_exec(t_data *data, t_cmd *cmd, char **envp)
-{	
-	char *cmd_path;
+static void	child_setup_and_exec(t_data *data, t_cmd *cmd, char **envp)
+{
+	char	*cmd_path;
 
 	if (heredoc_infile(cmd))
 		exit(EXIT_FAILURE);
@@ -75,10 +77,10 @@ static void child_setup_and_exec(t_data *data, t_cmd *cmd, char **envp)
 	exit(EXIT_SUCCESS);
 }
 
-static void parent_wait_and_cleanup(t_data *data, pid_t pid, t_cmd *cmd,
+static void	parent_wait_and_cleanup(t_data *data, pid_t pid, t_cmd *cmd,
 									char **envp)
 {
-	int status;
+	int	status;
 
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
@@ -97,14 +99,14 @@ static void parent_wait_and_cleanup(t_data *data, pid_t pid, t_cmd *cmd,
 
 void	exec_without_pipes(t_data *data, t_cmd *cmd)
 {
-	pid_t pid;
-	char **envp;
+	pid_t	pid;
+	char	**envp;
 
 	if (!cmd)
-		return;
+		return ;
 	if ((!cmd->args || !cmd->args[0]) && !cmd->heredoc)
 	{
-		execute_builtin_with_redirections(data, cmd);
+		data->last_exit_status = execute_builtin_with_redirections(data, cmd);
 		return ;
 	}
 	if (process_heredocs(cmd, data) == -1)

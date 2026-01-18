@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/17 17:44:21 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/18 18:32:45 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int		export_builtin(t_data *data, t_cmd *cmd);
 
 int		is_valid_varname(char *str);
 
+void	print_export(t_env *env);
+
 int		pwd_builtin(void);
 
 int		unset_builtin(t_data *data, t_cmd *cmd);
@@ -143,6 +145,15 @@ char	*expand_heredoc_line(const char *line, t_data *data);
 char	*get_heredoc_delim(const char *delim, int *expand);
 
 void	write_heredoc(char *line, int fd, int expand, t_data *data);
+
+void	parent_fds(t_cmd *cmd, int *prev_fd, int *fd);
+
+void	wait_children(int children, t_data *data);
+
+int		pipe_error(int prev_fd);
+
+int		fork_error(int prev_fd, int *fd, int has_pipe);
+
 
 // Parsing
 
