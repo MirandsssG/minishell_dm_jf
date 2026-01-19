@@ -55,38 +55,39 @@ The project emphasizes low-level programming concepts such as:
 ### Compilation
 
 To compile the project, run:
-
- `make`
-  
+```bash
+ make
+```
 This will generate the executable:
-
-`./minishell`
-
+```bash
+./minishell
+```
 ### Execution
 
 Launch minishell by running:
-
-`./minishell`
-
+```bash
+./minishell
+```
 
 You can then start typing commands as you would in a regular shell.
 
 ### Usage Examples
-`minishell$` echo Hello World
+```bash
+minishell$ echo Hello World
 
 Hello World
 
-`minishell$` ls | grep minishell
+minishell$ ls | grep minishell
 
 minishell.c
 
-`minishell$` export NAME=42
+minishell$ export NAME=42
 
-`minishell$` echo $NAME
+minishell$ echo $NAME
 
 42
 
-`minishell$` cat << EOF
+minishell$ cat << EOF
 > hello
 > minishell
 > EOF
@@ -94,7 +95,7 @@ minishell.c
 hello
 minishell
 
-
+```
 ## Resources
 ### Documentation & References
 
@@ -103,7 +104,7 @@ Bash manual: https://www.gnu.org/software/bash/manual/
 GNU C Library (glibc): https://www.gnu.org/software/libc/manual/
 
 Linux man pages:
-
+```bash
 man bash
 
 man execve
@@ -115,7 +116,7 @@ man pipe
 man dup2
 
 man signal
-
+```
 
 ## AI Usage
 
@@ -131,4 +132,3 @@ Debugging logic errors and edge cases
 
 All design decisions, implementation, and final code were written and validated by the project authors, in compliance with the 42 rules regarding academic integrity.
 
-```bash
