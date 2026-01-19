@@ -56,67 +56,44 @@ The project emphasizes low-level programming concepts such as:
 
 To compile the project, run:
 
-```bash
-make
-
+ `make`
+  
 This will generate the executable:
 
-./minishell
+`./minishell`
 
 ### Execution
 
 Launch minishell by running:
 
-./minishell
+`./minishell`
 
 
 You can then start typing commands as you would in a regular shell.
 
-To clean object files:
+### Usage Examples
+`minishell$` echo Hello World
 
-make clean
-
-
-To remove all compiled files:
-
-make fclean
-
-
-To recompile everything:
-
-make re
-
-## Usage Examples
-$ echo Hello World
 Hello World
 
-$ ls | grep minishell
+`minishell$` ls | grep minishell
+
 minishell.c
 
-$ export NAME=42
-$ echo $NAME
+`minishell$` export NAME=42
+
+`minishell$` echo $NAME
+
 42
 
-$ cat << EOF
+`minishell$` cat << EOF
 > hello
 > minishell
 > EOF
+
 hello
 minishell
 
-Technical Choices
-
-The project strictly follows the constraints of the 42 subject.
-
-Parsing is separated from execution to improve readability and maintainability.
-
-Built-in commands are handled without forking when required.
-
-External commands are executed using fork and execve.
-
-Signals are handled differently in the parent and child processes to match bash behavior.
-
-Memory is carefully managed to avoid leaks and undefined behavior.
 
 ## Resources
 ### Documentation & References
@@ -139,9 +116,8 @@ man dup2
 
 man signal
 
-Advanced Programming in the UNIX Environment – W. Richard Stevens
 
-AI Usage
+## AI Usage
 
 AI tools were used as a support resource during the development of this project, primarily for:
 
@@ -154,3 +130,5 @@ Improving code structure and readability
 Debugging logic errors and edge cases
 
 All design decisions, implementation, and final code were written and validated by the project authors, in compliance with the 42 rules regarding academic integrity.
+
+```bash
