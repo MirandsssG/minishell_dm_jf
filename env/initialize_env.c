@@ -3,44 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:19:53 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/09 21:08:38 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/29 01:00:54 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*get_key(char *env_str)
+static t_env	*init_default_env(void)
 {
-	int	i;
+	t_env	*head;
+	t_env	*last;
+	char	*cwd;
 
-	i = 0;
-	while (env_str[i] && env_str[i] != '=')
-		i++;
-	return (ft_strndup(env_str, i));
+	head = NULL;
+	last = NULL;
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		return (NULL);
+	if (add_default_var(&head, &last, "PWD", cwd))
+		return (free(cwd), NULL);
+	free(cwd);
+	if (add_default_var(&head, &last, "SHLVL", "1"))
+		return (free_env_list(head), NULL);
+	if (add_default_var(&head, &last,
+			"PATH", "/usr/local/bin:/usr/bin:/bin"))
+		return (free_env_list(head), NULL);
+	if (add_default_var(&head, &last, "_", "/usr/bin/env"))
+		return (free_env_list(head), NULL);
+	return (head);
 }
 
-char	*get_value(char *env_str)
+static char	*handle_shlvl(char *key, char *value)
 {
-	char	*equal_sign;
+	int	lvl;
 
-	equal_sign = ft_strchr(env_str, '=');
-	if (!equal_sign)
-		return (ft_strdup(""));
-	return (ft_strdup(equal_sign + 1));
+	if (ft_strcmp(key, "SHLVL") != 0)
+		return (value);
+	lvl = ft_atoi(value);
+	if (lvl < 0)
+		lvl = 0;
+	free(value);
+	return (ft_itoa(lvl + 1));
 }
 
-char	*get_env_value(const char *key, t_env *env)
+static int	append_env_node(
+	t_env **head, t_env **last, char *key, char *value)
 {
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (env->value);
-		env = env->next;
-	}
-	return (NULL);
+	t_env	*new;
+
+	new = new_env_node(key, value);
+	if (!new)
+		return (1);
+	if (!*head)
+		*head = new;
+	else
+		(*last)->next = new;
+	*last = new;
+	return (0);
 }
 
 t_env	*new_env_node(char *key, char *value)
@@ -69,75 +91,25 @@ t_env	*new_env_node(char *key, char *value)
 
 t_env	*init_env(char **envp)
 {
-	t_env	*head = NULL;
-	t_env	*last = NULL;
-	t_env	*new;
+	t_env	*head;
+	t_env	*last;
 	char	*key;
 	char	*value;
-	char	*cwd;
-	
+
+	head = NULL;
+	last = NULL;
 	if (!envp || !*envp)
-	{
-		cwd = getcwd(NULL, 0);
-		if (!cwd)
-			return (NULL);
-		head = new_env_node("PWD", cwd);
-		free(cwd);
-		if (!head)
-			return (NULL);
-		last = head;
-		new = new_env_node("SHLVL", "1");
-		if (!new)
-		{
-			free_env_list(head);
-			return (NULL);
-		}
-		last->next = new;
-		last = new;
-		new = new_env_node("PATH", "/usr/local/bin:/usr/bin:/bin");
-		if (!new)
-		{
-			free_env_list(head);
-			return (NULL);
-		}
-		last->next = new;
-		last = new;
-		new = new_env_node("_", "/usr/bin/env");
-		if (!new)
-		{
-			free_env_list(head);
-			return (NULL);
-		}
-		last->next = new;
-		return (head);
-	}
-	
+		return (init_default_env());
 	while (*envp)
 	{
-		int lvl = 0;
 		key = get_key(*envp);
 		value = get_value(*envp);
-		if (ft_strcmp(key, "SHLVL") == 0)
-		{
-			lvl = ft_atoi(value);
-			if (lvl < 0)
-				lvl = 0;
-			free(value);
-			value = ft_itoa(lvl + 1);
-		}
-		new = new_env_node(key, value);
+		value = handle_shlvl(key, value);
+		if (append_env_node(&head, &last, key, value))
+			return (free(key), free(value),
+				free_env_list(head), NULL);
 		free(key);
 		free(value);
-		if (!new)
-		{
-			free_env_list(head);
-			return (NULL);
-		}
-		if (!head)
-			head = new;
-		else
-			last->next = new;
-		last = new;
 		envp++;
 	}
 	return (head);

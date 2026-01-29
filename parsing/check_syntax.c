@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_syntax.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 17:10:31 by dluis-ma          #+#    #+#             */
-/*   Updated: 2026/01/17 17:45:10 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/29 00:53:38 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ static char	*pipe_error_token(char **t, int i)
 
 static int	syntax_error(char *token, t_data *data)
 {
-	ft_putstr_fd("minishell: syntax error near unexpected token `", STDERR_FILENO);
+	ft_putstr_fd("minishell: syntax error near unexpected "
+		"token `", STDERR_FILENO);
 	ft_putstr_fd(token, STDERR_FILENO);
 	ft_putstr_fd("'\n", STDERR_FILENO);
 	data->last_exit_status = 2;
@@ -55,4 +56,3 @@ int	check_syntax(char **tokens, t_data *data)
 	}
 	return (0);
 }
-

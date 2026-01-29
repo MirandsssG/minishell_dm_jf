@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diogo <diogo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/18 01:23:26 by diogo            ###   ########.fr       */
+/*   Updated: 2026/01/29 00:40:06 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	expand_variables(t_data *data)
 		if (is_heredoc_delimiter(data->tokens, i))
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		expanded = expand_token(data->tokens[i], data);
 		free(data->tokens[i]);

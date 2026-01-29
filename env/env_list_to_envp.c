@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 02:19:02 by mirandsssg        #+#    #+#             */
-/*   Updated: 2025/07/11 02:29:52 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/29 01:04:35 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	free_envp(char **envp)
 
 	i = 0;
 	if (!envp)
-		return;
+		return ;
 	while (envp[i])
 	{
 		free(envp[i]);
@@ -40,14 +40,28 @@ static int	count_env_vars(t_env *env_list)
 	return (count);
 }
 
+static char	*join_env_var(char *key, char *value)
+{
+	char	*joined;
+	size_t	key_len;
+	size_t	value_len;
+
+	key_len = ft_strlen(key);
+	value_len = ft_strlen(value);
+	joined = malloc(key_len + value_len + 2);
+	if (!joined)
+		return (NULL);
+	ft_strcpy(joined, key);
+	joined[key_len] = '=';
+	ft_strcpy(joined + key_len + 1, value);
+	return (joined);
+}
+
 char	**env_list_to_envp(t_env *env_list)
 {
 	int		i;
 	int		count;
 	char	**envp;
-	char	*joined;
-	size_t	key_len;
-	size_t	value_len;
 
 	i = 0;
 	count = count_env_vars(env_list);
@@ -56,18 +70,10 @@ char	**env_list_to_envp(t_env *env_list)
 		return (NULL);
 	while (env_list)
 	{
-		key_len = ft_strlen(env_list->key);
-		value_len = ft_strlen(env_list->value);
-		joined = malloc(key_len + value_len + 2);
-		if (!joined)
-		{
-			free_envp(envp);
-			return (NULL);
-		}
-		ft_strcpy(joined, env_list->key);
-		joined[key_len] = '=';
-		ft_strcpy(joined + key_len + 1, env_list->value);
-		envp[i++] = joined;
+		envp[i] = join_env_var(env_list->key, env_list->value);
+		if (!envp[i])
+			return (free_envp(envp), NULL);
+		i++;
 		env_list = env_list->next;
 	}
 	envp[i] = NULL;

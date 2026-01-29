@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cmds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 23:45:08 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 01:26:22 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/29 00:47:11 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*remove_quotes(const char *str)
+char	*remove_quotes(const char *str)
 {
 	char	*new_str;
 	int		i;
@@ -41,76 +41,29 @@ static char	*remove_quotes(const char *str)
 
 t_cmd	*parse_cmds(char **tokens)
 {
+	t_cmd	*head;
+	t_cmd	*curr;
+	t_cmd	*new;
 	int		i;
-	int		arg_i;
-	char	*arg;
-	int		heredoc_count;
-	int		j;
-	int		h_index;
-	
-	t_cmd *head = NULL;
-	t_cmd *current = NULL;
+	int		hd_count;
+
+	head = NULL;
+	curr = NULL;
 	i = 0;
 	while (tokens[i])
 	{
-		t_cmd *new_cmd = ft_calloc(1, sizeof(t_cmd));
-		if (!new_cmd)
-			return (NULL);
-		new_cmd->infile_fd = -1;
-		new_cmd->args = ft_calloc(100, sizeof(char*));
-		arg_i = 0;
-		heredoc_count = 0;
-		j = i;
-		while (tokens[j] && ft_strcmp(tokens[j], "|") != 0)
-		{
-			if (ft_strcmp(tokens[j], "<<") == 0 && tokens[j + 1])
-				heredoc_count++;
-			j++;
-		}
-		if (heredoc_count > 0)
-			new_cmd->heredoc_delim = ft_calloc(heredoc_count + 1, sizeof(char *));
-		h_index = 0;
-		while (tokens[i] && ft_strcmp(tokens[i], "|") != 0)
-		{
-			if (ft_strcmp(tokens[i], "<") == 0 && tokens[i + 1])
-				new_cmd->infile = ft_strdup(tokens[++i]);
-			else if (ft_strcmp(tokens[i], ">") == 0 && tokens[i + 1])
-			{
-				new_cmd->outfile = ft_strdup(tokens[++i]);
-				new_cmd->append = 0;
-			}
-			else if (ft_strcmp(tokens[i], ">>") == 0 && tokens[i + 1])
-			{
-				new_cmd->outfile = ft_strdup(tokens[++i]);
-				new_cmd->append = 1;
-			}
-			else if (ft_strcmp(tokens[i], "<<") == 0 && tokens[i + 1])
-			{
-				new_cmd->heredoc = 1;
-				new_cmd->heredoc_delim[h_index++] = ft_strdup(tokens[++i]);
-			}
-			else
-			{
-				arg = remove_quotes(tokens[i]);
-				new_cmd->args[arg_i++] = arg;
-			}
-			i++;
-		}
-		new_cmd->args[arg_i] = NULL;
-		if (new_cmd->heredoc_delim)
-			new_cmd->heredoc_delim[h_index] = NULL;
+		new = init_cmd();
+		hd_count = count_heredocs(tokens, i);
+		if (hd_count > 0)
+			new->heredoc_delim = ft_calloc(hd_count + 1, sizeof(char *));
+		i = parse_redirs_and_args(new, tokens, i);
 		if (!head)
-			head = new_cmd;
+			head = new;
 		else
-			current->next = new_cmd;
-		current = new_cmd;
+			curr->next = new;
+		curr = new;
 		if (tokens[i] && ft_strcmp(tokens[i], "|") == 0)
 			i++;
-		if (arg_i == 0)
-		{
-			free(new_cmd->args);
-			new_cmd->args = NULL;
-		}
 	}
 	return (head);
 }

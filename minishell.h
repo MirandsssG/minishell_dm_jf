@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/18 18:32:45 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/29 01:01:35 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,13 @@ typedef struct s_data
 	int			in_double;
 }	t_data;
 
+typedef struct s_parse_state
+{
+	int	i;
+	int	arg_i;
+	int	h_i;
+}	t_parse_state;
+
 // Builtins
 
 int		execute_builtin(t_data *data, t_cmd *cmd);
@@ -112,6 +119,8 @@ void	free_envp(char **envp);
 
 char	*get_env_value(const char *key, t_env *env);
 
+int		add_default_var(t_env **head, t_env **last, char *key, char *value);
+
 // Execute
 
 char	*find_command_path(char *cmd, char **envp);
@@ -154,7 +163,6 @@ int		pipe_error(int prev_fd);
 
 int		fork_error(int prev_fd, int *fd, int has_pipe);
 
-
 // Parsing
 
 void	tokenize_inputs(t_data *data);
@@ -164,6 +172,14 @@ void	expand_variables(t_data *data);
 int		is_builtin(const char *cmd);
 
 t_cmd	*parse_cmds(char **tokens);
+
+t_cmd	*init_cmd(void);
+
+int		count_heredocs(char **tokens, int i);
+
+int		parse_redirs_and_args(t_cmd *cmd, char **tokens, int i);
+
+char	*remove_quotes(const char *str);
 
 int		has_unclosed_quotes(const char *line);
 
