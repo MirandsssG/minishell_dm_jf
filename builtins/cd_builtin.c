@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:18:50 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 19:10:25 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/30 17:22:40 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,11 @@ int	cd_builtin(t_data *data, t_cmd *cmd)
 	char	*old_pwd;
 	char	*new_pwd;
 
+	if (cmd->args[2] != NULL)
+	{
+		ft_putstr_fd("cd: too many arguments\n", 2);
+		return (1);
+	}
 	if (change_directory(&path, cmd, &old_pwd))
 		return (1);
 	new_pwd = getcwd(NULL, 0);

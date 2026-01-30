@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:32 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/18 18:34:30 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/30 17:21:38 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,9 @@ int	export_builtin(t_data *data, t_cmd *cmd)
 	{
 		if (!is_valid_varname(cmd->args[i]))
 		{
-			printf("minishell: export: `%s`: not a valid varname\n",
-				cmd->args[i]);
+			ft_putstr_fd("minishell: export: '", 2);
+			ft_putstr_fd(cmd->args[i], 2);
+			ft_putstr_fd("`: not a valid identifier\n", 2);
 			ret = 1;
 		}
 		else

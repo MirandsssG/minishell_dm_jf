@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:42:33 by tafonso           #+#    #+#             */
-/*   Updated: 2026/01/18 15:34:27 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/01/30 19:25:06 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ void	wait_children(int children, t_data *data)
 		signal(SIGINT, ctrlc_handler);
 		if (WIFEXITED(status))
 			data->last_exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			data->last_exit_status = 128 + WTERMSIG(status);
 	}
 }
 

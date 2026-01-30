@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/29 00:40:06 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/01/29 21:15:59 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*remove_quotes(const char *str)
+static char	*remove_quotes_token(const char *str)
 {
 	char	*res;
 	int		i;
@@ -53,7 +53,7 @@ static char	*expand_token(const char *token, t_data *data)
 	result = ft_strdup("");
 	while (token[i])
 		process_char(token, data, &result, &i);
-	temp = remove_quotes(result);
+	temp = remove_quotes_token(result);
 	free(result);
 	return (temp);
 }
