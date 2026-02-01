@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/30 18:05:01 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/01 19:45:53 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@
 
 void	execute(t_data *data, t_cmd *cmds)
 {
+	if (cmds->args[0][0] == '\0' && !cmds->args[1])
+	{
+		data->last_exit_status = 0;
+		return ;
+	}
 	if (cmds && cmds->args && is_builtin(cmds->args[0]) && cmds->next == NULL)
 	{
 		data->last_exit_status = execute_builtin_with_redirections(data, cmds);
@@ -86,6 +91,8 @@ void	parse_and_exec(t_data *data)
 	if (check_tokens_and_syntax(data))
 		return ;
 	expand_variables(data);
+	// for (int i = 0; data->tokens[i]; i++)
+    // 	printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
 	cmds = parse_cmds(data->tokens);
 	if (!cmds)
 	{

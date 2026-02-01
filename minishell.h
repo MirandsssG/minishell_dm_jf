@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/29 01:01:35 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/01 18:45:14 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	write_heredoc(char *line, int fd, int expand, t_data *data);
 
 void	parent_fds(t_cmd *cmd, int *prev_fd, int *fd);
 
-void	wait_children(int children, t_data *data);
+void	wait_children(int children, t_data *data, pid_t pid);
 
 int		pipe_error(int prev_fd);
 

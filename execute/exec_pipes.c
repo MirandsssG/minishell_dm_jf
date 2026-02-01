@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 22:14:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/18 15:33:10 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/01 18:45:43 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,5 @@ void	exec_pipes(t_data *data, t_cmd *cmds)
 		parent_fds(cmds, &prev_fd, fd);
 		cmds = cmds->next;
 	}
-	wait_children(children, data);
+	wait_children(children, data, pid);
 }

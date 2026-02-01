@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:42:33 by tafonso           #+#    #+#             */
-/*   Updated: 2026/01/30 19:25:06 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/01 18:45:23 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ void	parent_fds(t_cmd *cmd, int *prev_fd, int *fd)
 		*prev_fd = -1;
 }
 
-void	wait_children(int children, t_data *data)
+void	wait_children(int children, t_data *data, pid_t pid)
 {
 	int	status;
 
 	while (children-- > 0)
 	{
 		signal(SIGINT, SIG_IGN);
-		wait(&status);
+		waitpid(pid ,&status, 0);
 		signal(SIGINT, ctrlc_handler);
 		if (WIFEXITED(status))
 			data->last_exit_status = WEXITSTATUS(status);
