@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:05:03 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/01 19:48:22 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/09 13:02:22 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ static void	parent_wait_and_cleanup(t_data *data, pid_t pid, t_cmd *cmd,
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		data->last_exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		data->last_exit_status = 128 + WTERMSIG(status);
 	signal(SIGINT, ctrlc_handler);
 	if (cmd->heredoc && cmd->infile_fd > 0)
 	{

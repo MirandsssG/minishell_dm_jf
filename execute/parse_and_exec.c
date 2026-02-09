@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_exec.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/09 00:23:07 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/09 16:25:01 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,15 @@
 
 void	execute(t_data *data, t_cmd *cmds)
 {
-	if (cmds->args[0][0] == '\0' && !cmds->args[1])
+	if (!cmds)
+		return ;
+	if ((!cmds->args || !cmds->args[0])
+		&& !cmds->infile && !cmds->outfile && !cmds->heredoc)
 	{
 		data->last_exit_status = 0;
 		return ;
 	}
-	if (cmds && cmds->args && is_builtin(cmds->args[0]) && cmds->next == NULL)
+	if (cmds->args && cmds->args[0] && is_builtin(cmds->args[0]) && cmds->next == NULL)
 	{
 		data->last_exit_status = execute_builtin_with_redirections(data, cmds);
 		return ;

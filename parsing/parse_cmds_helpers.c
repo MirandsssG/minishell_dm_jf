@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cmds_helpers.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 00:42:45 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/09 00:21:16 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/09 13:35:15 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,29 @@ t_cmd	*init_cmd(int arg_count, int in_count, int out_count, int hd_count)
 	if (hd_count > 0)
 		cmd->heredoc_delim = ft_calloc(hd_count + 1, sizeof(char *));
 	return (cmd);
+}
+
+static void	add_arg_if_nonempty(t_cmd *cmd, const char *token, int *arg_i)
+{
+	char	*arg;
+	int		was_quoted;
+
+	was_quoted = (token[0] == '"' || token[0] == '\'');
+	arg = remove_quotes(token);
+	if (!arg)
+		return ;
+	if (arg[0] != '\0')
+	{
+		cmd->args[*arg_i] = arg;
+		(*arg_i)++;
+	}
+	else if (was_quoted)
+	{
+		cmd->args[*arg_i] = arg;
+		(*arg_i)++;
+	}
+	else
+		free(arg);
 }
 
 int	count_heredocs(char **tokens, int i)
@@ -69,7 +92,7 @@ static void	handle_token(t_cmd *cmd, char **tokens, t_parse_state *st)
 		cmd->heredoc = 1;
 	}
 	else
-		cmd->args[st->arg_i++] = remove_quotes(tokens[st->i]);
+		add_arg_if_nonempty(cmd, tokens[st->i], &st->arg_i);
 }
 
 int	parse_redirs_and_args(t_cmd *cmd, char **tokens, int i)
