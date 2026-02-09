@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 23:29:40 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/08 23:42:53 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/09 00:15:16 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	alloc_redirs(t_cmd *cmd, char **tokens, int i)
 	in_count = count_infiles(tokens, i);
 	out_count = count_outfiles(tokens, i);
 	hd_count = count_heredocs(tokens, i);
-
 	if (in_count > 0)
 		cmd->infile = ft_calloc(in_count + 1, sizeof(char *));
 	if (out_count > 0)

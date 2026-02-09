@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 23:45:08 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/09 00:02:45 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/09 00:14:49 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,38 +67,37 @@ char	*remove_quotes(const char *str)
 	return (new_str);
 }
 
-t_cmd *parse_cmds(char **tokens)
+static t_cmd	*create_cmd(char **tokens, int i)
 {
-    t_cmd *head;
-    t_cmd *curr;
-    t_cmd *new;
-    int i;
-    int arg_count;
-    int in_count;
-    int out_count;
-    int hd_count;
+	return (init_cmd(count_args(tokens, i),
+			count_infiles(tokens, i),
+			count_outfiles(tokens, i),
+			count_heredocs(tokens, i)));
+}
 
-    head = NULL;
-    curr = NULL;
-    i = 0;
+t_cmd	*parse_cmds(char **tokens)
+{
+	t_cmd	*head;
+	t_cmd	*curr;
+	t_cmd	*new;
+	int		i;
 
-    while (tokens[i])
-    {
-        arg_count = count_args(tokens, i);
-        in_count = count_infiles(tokens, i);
-        out_count = count_outfiles(tokens, i);
-        hd_count = count_heredocs(tokens, i);
-        new = init_cmd(arg_count, in_count, out_count, hd_count);
-        if (!new)
-            return (NULL);
-        i = parse_redirs_and_args(new, tokens, i);
-        if (!head)
-            head = new;
-        else
-            curr->next = new;
-        curr = new;
-        if (tokens[i] && ft_strcmp(tokens[i], "|") == 0)
-            i++;
-    }
-    return head;
+	head = NULL;
+	curr = NULL;
+	i = 0;
+	while (tokens[i])
+	{
+		new = create_cmd(tokens, i);
+		if (!new)
+			return (NULL);
+		i = parse_redirs_and_args(new, tokens, i);
+		if (!head)
+			head = new;
+		else
+			curr->next = new;
+		curr = new;
+		if (tokens[i] && ft_strcmp(tokens[i], "|") == 0)
+			i++;
+	}
+	return (head);
 }

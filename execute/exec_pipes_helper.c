@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipes_helper.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:42:33 by tafonso           #+#    #+#             */
-/*   Updated: 2026/02/01 18:45:23 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/09 00:17:57 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	wait_children(int children, t_data *data, pid_t pid)
 	while (children-- > 0)
 	{
 		signal(SIGINT, SIG_IGN);
-		waitpid(pid ,&status, 0);
+		waitpid(pid, &status, 0);
 		signal(SIGINT, ctrlc_handler);
 		if (WIFEXITED(status))
 			data->last_exit_status = WEXITSTATUS(status);
