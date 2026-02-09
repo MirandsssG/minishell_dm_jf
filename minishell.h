@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/01 18:45:14 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/08 23:53:44 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ typedef struct s_env
 typedef struct s_cmd
 {
 	char			**args;
-	char			*infile;
+	char			**infile;
 	int				infile_fd;
-	char			*outfile;
+	char			**outfile;
 	int				append;
 	int				heredoc;
 	char			**heredoc_delim;
@@ -73,6 +73,8 @@ typedef struct s_parse_state
 	int	i;
 	int	arg_i;
 	int	h_i;
+	int	in_i;
+	int	out_i;
 }	t_parse_state;
 
 // Builtins
@@ -173,7 +175,7 @@ int		is_builtin(const char *cmd);
 
 t_cmd	*parse_cmds(char **tokens);
 
-t_cmd	*init_cmd(void);
+t_cmd	*init_cmd(int arg_count, int in_count, int out_count, int hd_count);
 
 int		count_heredocs(char **tokens, int i);
 
@@ -207,6 +209,18 @@ void	handle_word(t_data *data);
 int		is_special(char c);
 
 int		is_space(char c);
+
+void	alloc_redirs(t_cmd *cmd, char **tokens, int i);
+
+int		count_args(char **tokens, int i);
+
+void	add_arg(t_cmd *cmd, char *token);
+
+int		is_redirect(char *s);
+
+int		count_infiles(char **tokens, int i);
+
+int		count_outfiles(char **tokens, int i);
 
 // Syntax
 

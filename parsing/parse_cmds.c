@@ -6,11 +6,39 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 23:45:08 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/29 00:47:11 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/09 00:02:45 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	count_infiles(char **tokens, int i)
+{
+	int	count;
+
+	count = 0;
+	while (tokens[i] && ft_strcmp(tokens[i], "|") != 0)
+	{
+		if (ft_strcmp(tokens[i], "<") == 0)
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+int	count_outfiles(char **tokens, int i)
+{
+	int	count;
+
+	count = 0;
+	while (tokens[i] && ft_strcmp(tokens[i], "|") != 0)
+	{
+		if (ft_strcmp(tokens[i], ">") == 0 || ft_strcmp(tokens[i], ">>") == 0)
+			count++;
+		i++;
+	}
+	return (count);
+}
 
 char	*remove_quotes(const char *str)
 {
@@ -39,31 +67,38 @@ char	*remove_quotes(const char *str)
 	return (new_str);
 }
 
-t_cmd	*parse_cmds(char **tokens)
+t_cmd *parse_cmds(char **tokens)
 {
-	t_cmd	*head;
-	t_cmd	*curr;
-	t_cmd	*new;
-	int		i;
-	int		hd_count;
+    t_cmd *head;
+    t_cmd *curr;
+    t_cmd *new;
+    int i;
+    int arg_count;
+    int in_count;
+    int out_count;
+    int hd_count;
 
-	head = NULL;
-	curr = NULL;
-	i = 0;
-	while (tokens[i])
-	{
-		new = init_cmd();
-		hd_count = count_heredocs(tokens, i);
-		if (hd_count > 0)
-			new->heredoc_delim = ft_calloc(hd_count + 1, sizeof(char *));
-		i = parse_redirs_and_args(new, tokens, i);
-		if (!head)
-			head = new;
-		else
-			curr->next = new;
-		curr = new;
-		if (tokens[i] && ft_strcmp(tokens[i], "|") == 0)
-			i++;
-	}
-	return (head);
+    head = NULL;
+    curr = NULL;
+    i = 0;
+
+    while (tokens[i])
+    {
+        arg_count = count_args(tokens, i);
+        in_count = count_infiles(tokens, i);
+        out_count = count_outfiles(tokens, i);
+        hd_count = count_heredocs(tokens, i);
+        new = init_cmd(arg_count, in_count, out_count, hd_count);
+        if (!new)
+            return (NULL);
+        i = parse_redirs_and_args(new, tokens, i);
+        if (!head)
+            head = new;
+        else
+            curr->next = new;
+        curr = new;
+        if (tokens[i] && ft_strcmp(tokens[i], "|") == 0)
+            i++;
+    }
+    return head;
 }

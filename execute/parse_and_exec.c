@@ -3,44 +3,75 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_exec.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/01 19:45:53 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/09 00:03:10 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// static void print_cmds(t_cmd *cmds)
-// {
-//     t_cmd *tmp = cmds;
-//     int cmd_index = 0;
+static void print_cmds(t_cmd *cmds)
+{
+    t_cmd *tmp = cmds;
+    int cmd_index = 0;
 
-//     while (tmp)
-//     {
-//         printf("Command %d:\n", cmd_index);
-//         printf("  args: ");
-//         if (tmp->args)
-//         {
-//             for (int i = 0; tmp->args[i]; i++)
-//                 printf("'%s' ", tmp->args[i]);
-//         }
-//         else
-//             printf("(null)");
+    while (tmp)
+    {
+        printf("Command %d:\n", cmd_index);
 
-//         printf("\n");
-//         printf("  infile: %s\n", tmp->infile ? tmp->infile : "NULL");
-//         printf("  outfile: %s\n", tmp->outfile ? tmp->outfile : "NULL");
-//         printf("  append: %d\n", tmp->append);
-//         printf("  heredoc: %d\n", tmp->heredoc);
-//         // printf("  heredoc_delim: %s\n", tmp->heredoc_delim ? tmp->heredoc_delim : "NULL");
-//         printf("\n");
+        // Print args
+        printf("  args: ");
+        if (tmp->args)
+        {
+            for (int i = 0; tmp->args[i]; i++)
+                printf("'%s' ", tmp->args[i]);
+        }
+        else
+            printf("(null)");
+        printf("\n");
 
-//         tmp = tmp->next;
-//         cmd_index++;
-//     }
-// }
+        // Print infile array
+        printf("  infile: ");
+        if (tmp->infile)
+        {
+            for (int i = 0; tmp->infile[i]; i++)
+                printf("'%s' ", tmp->infile[i]);
+        }
+        else
+            printf("NULL");
+        printf("\n");
+
+        // Print outfile array
+        printf("  outfile: ");
+        if (tmp->outfile)
+        {
+            for (int i = 0; tmp->outfile[i]; i++)
+                printf("'%s' ", tmp->outfile[i]);
+        }
+        else
+            printf("NULL");
+        printf("\n");
+
+        printf("  append: %d\n", tmp->append);
+        printf("  heredoc: %d\n", tmp->heredoc);
+
+        // Print heredoc delimiters
+        printf("  heredoc_delim: ");
+        if (tmp->heredoc_delim)
+        {
+            for (int i = 0; tmp->heredoc_delim[i]; i++)
+                printf("'%s' ", tmp->heredoc_delim[i]);
+        }
+        else
+            printf("NULL");
+        printf("\n\n");
+
+        tmp = tmp->next;
+        cmd_index++;
+    }
+}
 
 void	execute(t_data *data, t_cmd *cmds)
 {
@@ -91,8 +122,8 @@ void	parse_and_exec(t_data *data)
 	if (check_tokens_and_syntax(data))
 		return ;
 	expand_variables(data);
-	// for (int i = 0; data->tokens[i]; i++)
-    // 	printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
+	for (int i = 0; data->tokens[i]; i++)
+    	printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
 	cmds = parse_cmds(data->tokens);
 	if (!cmds)
 	{
@@ -100,7 +131,7 @@ void	parse_and_exec(t_data *data)
 		data->tokens = NULL;
 		return ;
 	}
-	// print_cmds(cmds);
+	print_cmds(cmds);
 	execute(data, cmds);
 	free_cmds(cmds);
 	free_split(data->tokens);
