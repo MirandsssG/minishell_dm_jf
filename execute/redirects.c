@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 19:04:53 by tafonso           #+#    #+#             */
-/*   Updated: 2026/01/14 19:36:52 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/09 04:05:18 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,51 +29,48 @@ int	heredoc_infile(t_cmd *cmd)
 
 int	redirection_infile(t_cmd *cmd)
 {
-	int		infile_fd;
+	int	fd;
+	int	i;
 
-	infile_fd = -1;
-	if (cmd->infile)
+	if (!cmd->infile)
+		return (0);
+	i = 0;
+	while (cmd->infile[i])
 	{
-		infile_fd = open(cmd->infile, O_RDONLY);
-		if (infile_fd < 0)
-		{
-			perror("open infile");
-			return (1);
-		}
-		if (dup2(infile_fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2 infile");
-			close (infile_fd);
-			return (1);
-		}
-		close(infile_fd);
+		fd = open(cmd->infile[i], O_RDONLY);
+		if (fd < 0)
+			return (perror("open infile"), 1);
+		if (!cmd->infile[i + 1] && dup2(fd, STDIN_FILENO) == -1)
+			return (perror("dup2 infile"), close(fd), 1);
+		close(fd);
+		i++;
 	}
 	return (0);
 }
 
 int	redirection_outfile(t_cmd *cmd)
 {
-	int		outfile_fd;
-	int		flags;
+	int	fd;
+	int	flags;
+	int	i;
 
-	outfile_fd = -1;
-	if (cmd->outfile)
+	if (!cmd->outfile)
+		return (0);
+	i = 0;
+	while (cmd->outfile[i])
 	{
 		flags = O_WRONLY | O_CREAT;
 		if (cmd->append)
 			flags |= O_APPEND;
 		else
 			flags |= O_TRUNC;
-		outfile_fd = open(cmd->outfile, flags, 0644);
-		if (outfile_fd < 0)
+		fd = open(cmd->outfile[i], flags, 0644);
+		if (fd < 0)
 			return (perror("open outfile"), 1);
-		if (dup2(outfile_fd, STDOUT_FILENO) == -1)
-		{
-			perror("dup2 outfile");
-			close(outfile_fd);
-			return (1);
-		}
-		close(outfile_fd);
+		if (!cmd->outfile[i + 1] && dup2(fd, STDOUT_FILENO) == -1)
+			return (perror("dup2 outfile"), close(fd), 1);
+		close(fd);
+		i++;
 	}
 	return (0);
 }

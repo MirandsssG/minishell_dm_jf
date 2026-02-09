@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 00:06:28 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/18 15:45:28 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/09 03:36:16 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,19 @@ void	free_redirections(t_cmd *cmd)
 	int	i;
 
 	if (cmd->infile)
+	{
+		i = 0;
+		while (cmd->infile[i])
+			free(cmd->infile[i++]);
 		free(cmd->infile);
+	}
 	if (cmd->outfile)
+	{
+		i = 0;
+		while (cmd->outfile[i])
+			free(cmd->outfile[i++]);
 		free(cmd->outfile);
+	}
 	if (cmd->heredoc_delim)
 	{
 		i = 0;
