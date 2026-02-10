@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_token_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 11:54:13 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/10 16:15:36 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/10 17:25:44 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,24 +75,27 @@ void	process_char(const char *token, t_data *data,
 	char	c;
 
 	c = token[*i];
-    if (handle_quotes(c, data))
+	if (handle_quotes(c, data))
 	{
 		*result = ft_strjoin_free_expand(
-			*result, ft_strndup(&token[*i], 1), 1, 1);
+				*result, ft_strndup(&token[*i], 1), 1, 1);
 		(*i)++;
-		return;
+		return ;
 	}
-    if (c == '$' && !data->in_single)
-    {
-        if (handle_special_dollar(token, data, result, i))
-            return;
-        if (handle_env_var(token, data, result, i))
-            return;
-        *result = ft_strjoin_free_expand(*result, ft_strndup(&token[(*i)++], 1), 1, 1);
-        return;
-    }
-    *result = ft_strjoin_free_expand(*result, ft_strndup(&token[(*i)++], 1), 1, 1);
+	if (c == '$' && !data->in_single)
+	{
+		if (handle_special_dollar(token, data, result, i))
+			return ;
+		if (handle_env_var(token, data, result, i))
+			return ;
+		*result = ft_strjoin_free_expand(
+				*result, ft_strndup(&token[(*i)++], 1), 1, 1);
+		return ;
+	}
+	*result = ft_strjoin_free_expand(
+			*result, ft_strndup(&token[(*i)++], 1), 1, 1);
 }
+
 void	remove_token_index(char **tokens, int index)
 {
 	int	i;

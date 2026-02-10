@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 00:42:45 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/10 14:53:23 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/10 17:23:30 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ t_cmd	*init_cmd(int arg_count, int in_count, int out_count, int hd_count)
 static void	add_arg_if_nonempty(t_cmd *cmd, const char *token, int *arg_i)
 {
 	if (!token)
-        return;
-    cmd->args[*arg_i] = ft_strdup(token);
-    (*arg_i)++;
+		return ;
+	cmd->args[*arg_i] = ft_strdup(token);
+	(*arg_i)++;
 }
 
 int	count_heredocs(char **tokens, int i)
