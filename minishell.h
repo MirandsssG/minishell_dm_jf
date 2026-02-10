@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/10 14:44:43 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/10 16:11:57 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,8 @@ int		count_outfiles(char **tokens, int i);
 char	*remove_quotes_token(const char *str);
 
 void	remove_quotes_all(t_data *data);
+
+void	remove_token_index(char **tokens, int index);
 
 // Syntax
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_token_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 11:54:13 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/10 14:50:12 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/10 16:15:36 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,16 @@ void	process_char(const char *token, t_data *data,
         return;
     }
     *result = ft_strjoin_free_expand(*result, ft_strndup(&token[(*i)++], 1), 1, 1);
+}
+void	remove_token_index(char **tokens, int index)
+{
+	int	i;
+
+	i = index;
+	while (tokens[i + 1])
+	{
+		tokens[i] = tokens[i + 1];
+		i++;
+	}
+	tokens[i] = NULL;
 }

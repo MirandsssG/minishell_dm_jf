@@ -3,87 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_exec.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 11:13:21 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/10 14:45:22 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/10 16:25:17 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void print_cmds(t_cmd *cmds)
-{
-    t_cmd *tmp = cmds;
-    int cmd_index = 0;
-
-    while (tmp)
-    {
-        printf("Command %d:\n", cmd_index);
-
-        // Print args
-        printf("  args: ");
-        if (tmp->args)
-        {
-            for (int i = 0; tmp->args[i]; i++)
-                printf("'%s' ", tmp->args[i]);
-        }
-        else
-            printf("(null)");
-        printf("\n");
-
-        // Print infile array
-        printf("  infile: ");
-        if (tmp->infile)
-        {
-            for (int i = 0; tmp->infile[i]; i++)
-                printf("'%s' ", tmp->infile[i]);
-        }
-        else
-            printf("NULL");
-        printf("\n");
-
-        // Print outfile array
-        printf("  outfile: ");
-        if (tmp->outfile)
-        {
-            for (int i = 0; tmp->outfile[i]; i++)
-                printf("'%s' ", tmp->outfile[i]);
-        }
-        else
-            printf("NULL");
-        printf("\n");
-
-        printf("  append: %d\n", tmp->append);
-        printf("  heredoc: %d\n", tmp->heredoc);
-
-        // Print heredoc delimiters
-        printf("  heredoc_delim: ");
-        if (tmp->heredoc_delim)
-        {
-            for (int i = 0; tmp->heredoc_delim[i]; i++)
-                printf("'%s' ", tmp->heredoc_delim[i]);
-        }
-        else
-            printf("NULL");
-        printf("\n\n");
-
-        tmp = tmp->next;
-        cmd_index++;
-    }
-}
-
 void	execute(t_data *data, t_cmd *cmds)
 {
 	if (!cmds)
 		return ;
-	if ((!cmds->args || !cmds->args[0])
-		&& !cmds->infile && !cmds->outfile && !cmds->heredoc)
+	if (cmds->args[0][0] == '\0')
 	{
-		data->last_exit_status = 0;
+		data->last_exit_status = 127;
+		ft_putstr_fd("minishell: '", 2);
+		ft_putstr_fd(cmds->args[0], 2);
+		ft_putstr_fd("': command not found\n", 2);
 		return ;
 	}
-	if (cmds->args && cmds->args[0] && is_builtin(cmds->args[0]) && cmds->next == NULL)
+	if (cmds->args && cmds->args[0] && is_builtin(cmds->args[0])
+		&& cmds->next == NULL)
 	{
 		data->last_exit_status = execute_builtin_with_redirections(data, cmds);
 		return ;
@@ -125,11 +67,7 @@ void	parse_and_exec(t_data *data)
 	if (check_tokens_and_syntax(data))
 		return ;
 	expand_variables(data);
-	for (int i = 0; data->tokens[i]; i++)
-		printf("token_expanded[%d] = '%s'\n", i, data->tokens[i]);
 	remove_quotes_all(data);
-	for (int i = 0; data->tokens[i]; i++)
-    	printf("token_ready[%d] = '%s'\n", i, data->tokens[i]);
 	cmds = parse_cmds(data->tokens);
 	if (!cmds)
 	{
@@ -137,7 +75,6 @@ void	parse_and_exec(t_data *data)
 		data->tokens = NULL;
 		return ;
 	}
-	print_cmds(cmds);
 	execute(data, cmds);
 	free_cmds(cmds);
 	free_split(data->tokens);

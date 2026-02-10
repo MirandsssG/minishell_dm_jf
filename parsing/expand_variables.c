@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/10 14:45:46 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/10 16:13:45 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,12 @@ void	expand_variables(t_data *data)
 		}
 		expanded = expand_token(data->tokens[i], data);
 		free(data->tokens[i]);
+		if (expanded[0] == '\0' && !data->in_single && !data->in_double)
+		{
+			free(expanded);
+			remove_token_index(data->tokens, i);
+			continue ;
+		}
 		data->tokens[i] = expanded;
 		i++;
 	}
