@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/12 11:54:13 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/12 12:01:36 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/10 14:50:12 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,18 +72,24 @@ int	handle_env_var(const char *token, t_data *data,
 void	process_char(const char *token, t_data *data,
 							char **result, int *i)
 {
-	if (handle_quotes(token[*i], data))
-		(*i)++;
-	else if (token[*i] == '$' && !data->in_single)
+	char	c;
+
+	c = token[*i];
+    if (handle_quotes(c, data))
 	{
-		if (handle_special_dollar(token, data, result, i))
-			return ;
-		if (handle_env_var(token, data, result, i))
-			return ;
 		*result = ft_strjoin_free_expand(
-				*result, ft_strndup(&token[(*i)++], 1), 1, 1);
+			*result, ft_strndup(&token[*i], 1), 1, 1);
+		(*i)++;
+		return;
 	}
-	else
-		*result = ft_strjoin_free_expand(
-				*result, ft_strndup(&token[(*i)++], 1), 1, 1);
+    if (c == '$' && !data->in_single)
+    {
+        if (handle_special_dollar(token, data, result, i))
+            return;
+        if (handle_env_var(token, data, result, i))
+            return;
+        *result = ft_strjoin_free_expand(*result, ft_strndup(&token[(*i)++], 1), 1, 1);
+        return;
+    }
+    *result = ft_strjoin_free_expand(*result, ft_strndup(&token[(*i)++], 1), 1, 1);
 }

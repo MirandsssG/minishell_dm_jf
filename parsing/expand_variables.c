@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 12:26:41 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/29 21:15:59 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/10 14:45:46 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*remove_quotes_token(const char *str)
+char	*remove_quotes_token(const char *str)
 {
 	char	*res;
 	int		i;
@@ -41,10 +41,24 @@ static char	*remove_quotes_token(const char *str)
 	return (res);
 }
 
+void	remove_quotes_all(t_data *data)
+{
+	int		i;
+	char	*temp;
+
+	i = 0;
+	while (data->tokens[i])
+	{
+		temp = remove_quotes_token(data->tokens[i]);
+		free(data->tokens[i]);
+		data->tokens[i] = temp;
+		i++;
+	}
+}
+
 static char	*expand_token(const char *token, t_data *data)
 {
 	char	*result;
-	char	*temp;
 	int		i;
 
 	i = 0;
@@ -53,9 +67,7 @@ static char	*expand_token(const char *token, t_data *data)
 	result = ft_strdup("");
 	while (token[i])
 		process_char(token, data, &result, &i);
-	temp = remove_quotes_token(result);
-	free(result);
-	return (temp);
+	return (result);
 }
 
 static int	is_heredoc_delimiter(char **tokens, int i)

@@ -6,7 +6,7 @@
 /*   By: mirandsssg <mirandsssg@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:56:59 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/02/08 23:53:44 by mirandsssg       ###   ########.fr       */
+/*   Updated: 2026/02/10 14:44:43 by mirandsssg       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,10 @@ int		is_redirect(char *s);
 int		count_infiles(char **tokens, int i);
 
 int		count_outfiles(char **tokens, int i);
+
+char	*remove_quotes_token(const char *str);
+
+void	remove_quotes_all(t_data *data);
 
 // Syntax
 
