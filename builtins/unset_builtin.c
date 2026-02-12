@@ -6,7 +6,7 @@
 /*   By: tafonso <tafonso@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 16:19:39 by mirandsssg        #+#    #+#             */
-/*   Updated: 2026/01/14 19:21:05 by tafonso          ###   ########.fr       */
+/*   Updated: 2026/02/11 20:50:24 by tafonso          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,9 @@ int	unset_builtin(t_data *data, t_cmd *cmd)
 	{
 		if (!is_valid_varname(args[i]))
 		{
-			printf("minishell: unset: `%s`: not a valid varname\n", args[i]);
+			ft_putstr_fd("minishell: unset: '", 2);
+			ft_putstr_fd(cmd->args[i], 2);
+			ft_putstr_fd("`: not a valid varname\n", 2);
 			ret = 1;
 		}
 		else
